@@ -220,7 +220,7 @@ MonoBehaviour:
   m_AstralActors:
   - {fileID: 1587796327}
   m_Mass: 1
-  m_Velocity: {x: 0, y: 0, z: 5}
+  m_Velocity: {x: 0, y: 0, z: 29.291}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
