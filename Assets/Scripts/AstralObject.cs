@@ -8,20 +8,22 @@ public class AstralObject : MonoBehaviour
 
     //
 
-    private Globals globals;
+    [SerializeField] private Globals globals;
     [SerializeField, Tooltip("in astronomical mass unit")] private float m_Mass = 1f;
     //In kilograms
     public float convertedMass { get; private set; }
     //[SerializeField] private Vector3 m_Position= new Vector3( 1f, 0f, 0f );
-    //In meters
-    [SerializeField] public Vector3 convertedPosition { get; private set; }
+
+    [SerializeField] private AstralObject m_CenterOfEllipse;
 
     [SerializeField] private Vector3 m_Velocity = Vector3.zero;
     [SerializeField, Min(0F)] private float m_Eccentricity;
+    //In meters
+    public Vector3 convertedPosition { get; private set; }
 
-    [SerializeField] public Vector3 convertedVelocity { get; private set; }
+    public Vector3 convertedVelocity { get; private set; }
 
-    [SerializeField] public Vector3 acceleration { get; private set; }
+    public Vector3 acceleration { get; private set; }
     //seems useless
     //[SerializeField] private float m_Size {get { return m_Size; } set { transform.localScale = new Vector3(value, value, value); } }
 
@@ -42,8 +44,10 @@ public class AstralObject : MonoBehaviour
     void Start()
     {
         //Here to compute the velocity at aphelion
-        if (this != globals.sun)
-            m_Velocity.z = Mathf.Sqrt(globals.universalGravityConst * globals.sun.convertedMass * (1F - m_Eccentricity) / ((convertedPosition - globals.sun.convertedPosition).magnitude * (1F + m_Eccentricity))) / globals.asu2ms;
+        if (m_CenterOfEllipse)
+        {
+            m_Velocity.z = m_CenterOfEllipse.m_Velocity.z + Mathf.Sqrt(globals.universalGravityConst * m_CenterOfEllipse.convertedMass * (1F - m_Eccentricity) / ((convertedPosition - m_CenterOfEllipse.convertedPosition).magnitude * (1F + m_Eccentricity))) / globals.asu2ms;
+        }
         convertedVelocity = m_Velocity * globals.asu2ms;
         //transform.localScale = new Vector3(m_Size, m_Size, m_Size);
     }
