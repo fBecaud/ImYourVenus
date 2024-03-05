@@ -6,6 +6,8 @@ public class Globals : MonoBehaviour
 {
     //TODO: Maybe set the 3 next var in read only
 
+    [SerializeField, Tooltip("astronomical distance unit per distance unit in unity")] public float unity2astronomy = 0.01F;
+
     //astronomical mass unit to kilogram
     [SerializeField, Tooltip("astronomical mass unit to kilogram")]public float amu2kg = 5.972e24F;
     //astronomical distance unit to meters
@@ -18,12 +20,11 @@ public class Globals : MonoBehaviour
     [SerializeField] public AstralObject sun;
 
     [SerializeField, Min(0f)] private static float s_m_TimeStep = 100 * 24 * 3600f; // /!\ CARE: this is not a standard DeltaTime
-    [SerializeField]public float timeStep { get; private set; } // /!\ CARE: this is not a standard DeltaTime
+    [SerializeField] public float timeStep { get { return s_m_TimeStep; } } // /!\ CARE: this is not a standard DeltaTime
 
     // Start is called before the first frame update
     void Awake()
     {
-        timeStep = s_m_TimeStep;
     }
 
     // Update is called once per frame

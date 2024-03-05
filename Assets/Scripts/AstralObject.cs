@@ -30,7 +30,7 @@ public class AstralObject : MonoBehaviour
     private void ConvertUnits()
     {
         convertedMass = m_Mass * globals.amu2kg;
-        convertedPosition = transform.position * globals.adu2m;
+        convertedPosition = transform.position * (globals.adu2m * globals.unity2astronomy);
         convertedVelocity = m_Velocity * globals.asu2ms;
     }
 
@@ -65,7 +65,7 @@ public class AstralObject : MonoBehaviour
     {
         convertedPosition += (convertedVelocity + 0.5f * acceleration * globals.timeStep * Time.fixedDeltaTime) * globals.timeStep * Time.fixedDeltaTime;
         //Reposition the planet
-        transform.position = convertedPosition / globals.adu2m;
+        transform.position = convertedPosition / (globals.adu2m * globals.unity2astronomy);
         Vector3 newAcceleration = ComputeField(globals.astralActors);
         convertedVelocity += (acceleration + newAcceleration) * 0.5f * globals.timeStep * Time.fixedDeltaTime;
         acceleration = newAcceleration;
