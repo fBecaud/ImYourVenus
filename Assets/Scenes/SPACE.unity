@@ -515,6 +515,7 @@ MonoBehaviour:
   universalGravityConst: 6.6743e-11
   astralActors: []
   sun: {fileID: 1587796327}
+  m_HourPerSecond: 24
 --- !u!4 &396314248
 Transform:
   m_ObjectHideFlags: 0

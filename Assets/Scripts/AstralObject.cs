@@ -63,17 +63,20 @@ public class AstralObject : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        transform.position = convertedPosition / (globals.adu2m * globals.unity2astronomy);
+    }
+    public void ComputeField(List<AstralObject> _everyActors)
+    {
         convertedPosition += (convertedVelocity + 0.5f * acceleration * globals.timeStep * Time.fixedDeltaTime) * globals.timeStep * Time.fixedDeltaTime;
         //Reposition the planet
-        transform.position = convertedPosition / (globals.adu2m * globals.unity2astronomy);
-        Vector3 newAcceleration = ComputeField(globals.astralActors);
+        Vector3 newAcceleration = ComputeAcceleration(globals.astralActors);
         convertedVelocity += (acceleration + newAcceleration) * 0.5f * globals.timeStep * Time.fixedDeltaTime;
         acceleration = newAcceleration;
     }
-    Vector3 ComputeField(List<AstralObject> _everyActors)
+
+    Vector3 ComputeAcceleration(List<AstralObject> _everyActors)
     {
         Vector3 newAcceleration = Vector3.zero;
-        //TODO: TEST this
         foreach (AstralObject influence in _everyActors)
         {
             if (influence == this)
