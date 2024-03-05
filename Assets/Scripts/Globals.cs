@@ -58,16 +58,26 @@ public class Globals : MonoBehaviour
     void Awake()
     {
     }
-     void OnValidate()
+    void OnValidate()
     {
-        if (m_TimeDivision == TimeDivision.second)
-            SetTimeStepSecond();
-        else if (m_TimeDivision == TimeDivision.minute)
-            SetTimeStepMinute();
-        else if (m_TimeDivision == TimeDivision.hour)
-            SetTimeStepHour();
-        else if (m_TimeDivision == TimeDivision.day)
-            SetTimeStepDay();
+        switch (m_TimeDivision)
+        {
+            case (TimeDivision.second):
+                SetTimeStepSecond();
+                break;
+            case (TimeDivision.minute):
+                SetTimeStepMinute();
+                break;
+            case (TimeDivision.hour):
+                SetTimeStepHour();
+                break;
+            case (TimeDivision.day):
+                SetTimeStepDay();
+                break;
+            default:
+                break;
+        }
+
     }
     // Update is called once per frame
     void FixedUpdate()
