@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 using static UnityEngine.GraphicsBuffer;
 using UnityEditor;
+using Unity.Jobs;
 
 
 public class Globals : MonoBehaviour
 {
     //TODO: Maybe set the 3 next var in read only
-
+    [SerializeField] public Camera mainCamera;
     [SerializeField, Tooltip("astronomical distance unit per distance unit in unity")] public float unity2astronomy = 0.01F;
 
     //astronomical mass unit to kilogram
@@ -57,7 +59,9 @@ public class Globals : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        mainCamera = FindObjectOfType<Camera>();
     }
+
     void OnValidate()
     {
         switch (m_TimeDivision)

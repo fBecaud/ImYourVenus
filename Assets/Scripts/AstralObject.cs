@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class AstralObject : MonoBehaviour
 {
@@ -25,7 +26,9 @@ public class AstralObject : MonoBehaviour
 
     public Vector3 acceleration { get; private set; }
     //seems useless
-    //[SerializeField] private float m_Size {get { return m_Size; } set { transform.localScale = new Vector3(value, value, value); } }
+    private float m_SizeFactor = 1f;
+    public float sizeFactor { get { return m_SizeFactor; } private set { } }
+    private Vector3 m_originalSize;
 
     private void ConvertUnits()
     {
@@ -39,6 +42,7 @@ public class AstralObject : MonoBehaviour
         globals = FindObjectOfType<Globals>();
         globals.astralActors.Add(this);
         ConvertUnits();
+        m_originalSize = transform.localScale;
     }
     // Start is called before the first frame update
     void Start()
@@ -59,11 +63,45 @@ public class AstralObject : MonoBehaviour
 
         ConvertUnits();
     }
+    void Update()
+    {
+        Resize();
+    }
 
+    private void Resize()
+    {
+        if (m_CenterOfEllipse && m_CenterOfEllipse != globals.sun)
+        {
+            m_SizeFactor = m_CenterOfEllipse.m_SizeFactor;
+        }
+        else
+        {
+        m_SizeFactor = (globals.mainCamera.transform.position - transform.position).magnitude;
+        m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f / m_originalSize.magnitude, 10f / m_originalSize.magnitude);
+        }
+        transform.localScale = m_originalSize * m_SizeFactor;
+
+    }
+    private void ProcessPosition()
+    {
+        if (!m_CenterOfEllipse)
+        {
+            return;
+        }
+        if (m_CenterOfEllipse == globals.sun)
+        {
+            transform.position = convertedPosition / (globals.adu2m * globals.unity2astronomy);
+        }
+        else
+        {
+            Vector3 orbitVector = convertedPosition - m_CenterOfEllipse.convertedPosition;
+            transform.position = (m_CenterOfEllipse.convertedPosition + orbitVector * m_SizeFactor) / (globals.adu2m * globals.unity2astronomy);
+        }
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.position = convertedPosition / (globals.adu2m * globals.unity2astronomy);
+        ProcessPosition();
     }
     public void ComputeField(List<AstralObject> _everyActors)
     {
