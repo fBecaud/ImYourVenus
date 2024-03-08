@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Mass: 14.536
   m_CenterOfEllipse: {fileID: 1587796327}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.04726
+  m_Eccentricity: 0.04726000130176544
 --- !u!1001 &252590114
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -247,15 +247,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.08527042
+      value: 0.08527043
       objectReference: {fileID: 0}
     - target: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.08527042
+      value: 0.08527043
       objectReference: {fileID: 0}
     - target: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.08527042
+      value: 0.08527043
       objectReference: {fileID: 0}
     - target: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
       propertyPath: m_LocalPosition.x
@@ -308,6 +308,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
       insertIndex: -1
       addedObject: {fileID: 368460127}
+    - targetCorrespondingSourceObject: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 963194228}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1733945558841920, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
       insertIndex: -1
@@ -334,7 +337,7 @@ MonoBehaviour:
   m_Mass: 1
   m_CenterOfEllipse: {fileID: 1587796327}
   m_Velocity: {x: 0, y: 0, z: 9.5}
-  m_Eccentricity: 0.01671022
+  m_Eccentricity: 0.016710219904780388
 --- !u!4 &252590118 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
@@ -414,7 +417,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 5
+  m_Time: 25
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -507,14 +510,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
   unity2astronomy: 0.01
-  amu2kg: 5.972e+24
-  adu2m: 1.4959786e+11
+  amu2kg: 5.972000231429685e+24
+  adu2m: 149597863936
   asu2ms: 1000
-  universalGravityConst: 6.6743e-11
+  universalGravityConst: 0.00000000006674300001563438
   astralActors: []
   sun: {fileID: 1587796327}
-  m_TimeDivision: 0
-  m_StepPerTick: 1
+  m_TimeDivision: 2
+  m_StepPerTick: 100
 --- !u!4 &396314248
 Transform:
   m_ObjectHideFlags: 0
@@ -604,7 +607,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 3.0759754
+  m_Time: 15.379875
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -740,7 +743,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 420.05475
+  m_Time: 2100.2734
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -1001,7 +1004,7 @@ MonoBehaviour:
   m_Mass: 0.815
   m_CenterOfEllipse: {fileID: 1587796327}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.00678
+  m_Eccentricity: 0.006779999937862158
 --- !u!1 &923382992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,7 +1079,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 9.4
+  m_Time: 47
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -1224,12 +1227,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 100, y: 0.93797463, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 174.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 252590118}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
@@ -1362,7 +1365,7 @@ MonoBehaviour:
   m_Mass: 317.8
   m_CenterOfEllipse: {fileID: 1587796327}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.04839
+  m_Eccentricity: 0.04839000105857849
 --- !u!1 &1261213867
 GameObject:
   m_ObjectHideFlags: 0
@@ -1437,7 +1440,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 150
+  m_Time: 750
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -1604,7 +1607,7 @@ MonoBehaviour:
   m_Mass: 95.152
   m_CenterOfEllipse: {fileID: 1587796327}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.0539
+  m_Eccentricity: 0.05389999970793724
 --- !u!4 &1321296701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4677324220665258, guid: b4201d402613a4464b35c805dafcca62, type: 3}
@@ -1684,7 +1687,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1.2054795
+  m_Time: 6.0274
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -1846,7 +1849,7 @@ MonoBehaviour:
   m_Mass: 0.055
   m_CenterOfEllipse: {fileID: 1587796327}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.2056
+  m_Eccentricity: 0.20559999346733093
 --- !u!4 &1492410537 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4620931210112870, guid: ab152f61198d54532ae39108e616ff59, type: 3}
@@ -2111,7 +2114,7 @@ MonoBehaviour:
   m_Mass: 0.107
   m_CenterOfEllipse: {fileID: 1587796327}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.09339
+  m_Eccentricity: 0.09339000284671783
 --- !u!1 &1820637112
 GameObject:
   m_ObjectHideFlags: 0
@@ -2186,7 +2189,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 59.3
+  m_Time: 296.5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -2322,7 +2325,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 5
+  m_Time: 25
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -2488,7 +2491,7 @@ MonoBehaviour:
   m_Mass: 0.0123
   m_CenterOfEllipse: {fileID: 252590116}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.0549
+  m_Eccentricity: 0.05490000173449516
 --- !u!4 &2137400690 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4693579709242440, guid: f9a741bb8762344c6a2a9cb4217ef728, type: 3}
@@ -2508,4 +2511,3 @@ SceneRoots:
   - {fileID: 1030443311}
   - {fileID: 1321296697}
   - {fileID: 89461218}
-  - {fileID: 963194228}

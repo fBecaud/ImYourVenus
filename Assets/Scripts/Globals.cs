@@ -11,7 +11,7 @@ public class Globals : MonoBehaviour
 {
     //TODO: Maybe set the 3 next var in read only
     [SerializeField] public Camera mainCamera;
-    [SerializeField, Tooltip("astronomical distance unit per distance unit in unity")] public float unity2astronomy = 0.01F;
+    [SerializeField, Tooltip("astronomical distance unit per distance unit in unity")] public float unity2astronomy = 100F;
 
     //astronomical mass unit to kilogram
     [SerializeField, Tooltip("astronomical mass unit to kilogram")] public float amu2kg = 5.972e24F;
@@ -31,30 +31,31 @@ public class Globals : MonoBehaviour
     [SerializeField]
     TimeDivision m_TimeDivision;
     private float m_TimeStep = 3600f * 50f; // /!\ CARE: this is not a standard DeltaTime
-    [SerializeField, Range(0, 50), Tooltip("How many timedivision by tick (0.2 seconds)")] private int m_StepPerTick = 1;
+    [SerializeField, Range(0, 1500), Tooltip("How many timedivision by tick (0.2 seconds)")] private int m_StepPerTick = 1;
     public float timeStep { get { return m_TimeStep; } } // /!\ CARE: this is not a standard DeltaTime
 
 
     public void SetTimeStepSecond()
     {
-        m_TimeStep = 1f / Time.fixedDeltaTime;
+        m_TimeStep = 1f;
     }
     public void SetTimeStepMinute()
     {
-        m_TimeStep = 60f / Time.fixedDeltaTime;
+        m_TimeStep = 60f;
     }
+    //From here too quick
     public void SetTimeStepHour()
     {
-        m_TimeStep = 3600f / Time.fixedDeltaTime;
+        m_TimeStep = 3600f;
     }
     public void SetTimeStepDay()
     {
-        m_TimeStep = 24f * 3600f / Time.fixedDeltaTime;
+        m_TimeStep = 24f * 3600f;
     }
     //Too quick
     public void SetTimeStepMonth()
     {
-        m_TimeStep = 30f * 24f * 3600f / Time.fixedDeltaTime;
+        m_TimeStep = 30f * 24f * 3600f;
     }
     // Start is called before the first frame update
     void Awake()
@@ -89,7 +90,10 @@ public class Globals : MonoBehaviour
         for (int i = 0; i < m_StepPerTick; i++)
         {
             foreach (AstralObject obj in astralActors)
+            {
+                if (obj == sun) continue;
                 obj.ComputeField(astralActors);
+            }
         }
     }
 
