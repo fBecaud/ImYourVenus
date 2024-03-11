@@ -31,6 +31,9 @@ public class NewPlanetPlacer : MonoBehaviour
 
     [SerializeField] private Vector3 NewPlanetScale = new(0.08f, 0.08f, 0.08f);
 
+    // Trails
+    [SerializeField] private GameObject TrailsPrefab = null;
+
     public bool IsPlacingPlanet { get; private set; }
 
     // true = Placement Mode (starting mode)
@@ -44,6 +47,7 @@ public class NewPlanetPlacer : MonoBehaviour
         if (PlaceButton == null || CancelButton == null
             || ErrorTxt == null || InfoTxt == null
             || NewWeight == null || NewSpeed == null
+            || TrailsPrefab == null
             || NewPlanetsPrefabs.Count == 0)
         {
             Debug.LogError("One or multiple field unset in UI_NewPlanet");
@@ -108,12 +112,12 @@ public class NewPlanetPlacer : MonoBehaviour
         while (NewPlanetToPlace != null)
         {
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Plane plane = new(Vector3.up, 0);
+                Ray Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Plane Plane = new(Vector3.up, 0);
 
-                if (plane.Raycast(ray, out float distance))
+                if (Plane.Raycast(Ray, out float distance))
                 {
-                    var WorldPosition = ray.GetPoint(distance);
+                    var WorldPosition = Ray.GetPoint(distance);
                     NewPlanetToPlace.transform.position = new(WorldPosition.x, 0f, WorldPosition.z);
                 }
             }
@@ -125,6 +129,8 @@ public class NewPlanetPlacer : MonoBehaviour
                 var AstralScript = NewPlanetToPlace.AddComponent<AstralObject>();
 
                 // TODO set script vars
+
+                var Trails = Instantiate(TrailsPrefab, NewPlanetToPlace.transform);
 
                 NewPlanetToPlace = null;
                 InfoTxt.gameObject.SetActive(false);
