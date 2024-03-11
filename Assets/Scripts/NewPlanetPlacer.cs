@@ -50,7 +50,7 @@ public class NewPlanetPlacer : MonoBehaviour
             || TrailsPrefab == null
             || NewPlanetsPrefabs.Count == 0)
         {
-            Debug.LogError("One or multiple field unset in UI_NewPlanet");
+            Debug.LogError("One or multiple field unset in NewPlanetPlacer");
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
 #endif
