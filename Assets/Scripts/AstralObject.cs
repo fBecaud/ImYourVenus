@@ -1,14 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Android;
 
 public class AstralObject : MonoBehaviour
 {
     //
-
+    SphereCollider m_SphereCollider;
     [SerializeField] private Globals globals;
     [SerializeField, Tooltip("in astronomical mass unit")] private float m_Mass = 1f;
 
@@ -46,10 +48,23 @@ public class AstralObject : MonoBehaviour
 
     private void Awake()
     {
+        bool hasCollider = TryGetComponent<SphereCollider>(out m_SphereCollider);
         globals = FindObjectOfType<Globals>();
         globals.astralActors.Add(this);
         ConvertUnits();
         m_originalSize = transform.localScale;
+        if (!hasCollider)
+        {
+            m_SphereCollider = gameObject.AddComponent<SphereCollider>();
+            m_SphereCollider.center = Vector3.zero;
+            m_SphereCollider.enabled = true;
+            m_SphereCollider.radius = 1f;
+        }
+        m_SphereCollider.isTrigger = true;
+    }
+    private void OnDestroy()
+    {
+        globals.astralActors.Remove(this);
     }
 
     // Start is called before the first frame update
@@ -89,6 +104,7 @@ public class AstralObject : MonoBehaviour
             m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f / m_originalSize.magnitude, 10f / m_originalSize.magnitude);
         }
         transform.localScale = m_originalSize * m_SizeFactor;
+        //m_SphereCollider.radius = 1f / m_SizeFactor;
     }
 
     private void ProcessPosition()
@@ -112,10 +128,10 @@ public class AstralObject : MonoBehaviour
 
     public void ComputeField(List<AstralObject> _everyActors)
     {
-        convertedPosition += (convertedVelocity + 0.5f * acceleration * (globals.timeStep * Time.fixedDeltaTime)) * (globals.timeStep * Time.fixedDeltaTime);
+        convertedPosition += (convertedVelocity + 0.5f * acceleration * (globals.timeStep)) * (globals.timeStep);
         //Reposition the planet
         Vector3 newAcceleration = ComputeAcceleration(globals.astralActors);
-        convertedVelocity += (acceleration + newAcceleration) * 0.5f * (globals.timeStep * Time.fixedDeltaTime);
+        convertedVelocity += (acceleration + newAcceleration) * 0.5f * (globals.timeStep);
         acceleration = newAcceleration;
     }
 
@@ -136,5 +152,29 @@ public class AstralObject : MonoBehaviour
     private void OnMouseDown()
     {
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        AstralObject otherAstral;
+        if (!other.gameObject.TryGetComponent(out otherAstral))
+        {
+            if (otherAstral.m_Mass > m_Mass)
+            {
+                float ratio = m_Mass / otherAstral.m_Mass;
+                otherAstral.m_Mass += m_Mass;
+                otherAstral.convertedMass += convertedMass;
+                otherAstral.m_originalSize *= ratio;
+                Destroy(this);
+            }
+            else
+            {
+                float ratio = otherAstral.m_Mass / m_Mass;
+                m_Mass += otherAstral.m_Mass;
+                convertedMass += otherAstral.convertedMass;
+                m_originalSize *= ratio;
+                Destroy(otherAstral);
+            }
+        }
     }
 }

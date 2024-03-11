@@ -1310,7 +1310,7 @@ MonoBehaviour:
   astralActors: []
   sun: {fileID: 1587796327}
   m_TimeDivision: 2
-  m_StepPerTick: 213
+  m_StepPerTick: 164
 --- !u!4 &396314248
 Transform:
   m_ObjectHideFlags: 0
@@ -4508,9 +4508,9 @@ Transform:
   m_GameObject: {fileID: 1529365830}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1067.193, y: 0, z: 0}
-  m_LocalScale: {x: 11.727395, y: 11.727395, z: 11.727395}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 252590118}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10917,7 +10917,7 @@ MonoBehaviour:
   m_Mass: 0.0123
   m_CenterOfEllipse: {fileID: 252590116}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0.0549
+  m_Eccentricity: 0
 --- !u!4 &2137400690 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4693579709242440, guid: f9a741bb8762344c6a2a9cb4217ef728, type: 3}
