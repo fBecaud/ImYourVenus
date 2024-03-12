@@ -12,16 +12,14 @@ public class AstralObject : MonoBehaviour
     //
     SphereCollider m_SphereCollider;
     [SerializeField] private Globals globals;
-    [SerializeField, Tooltip("in astronomical mass unit")] private float m_Mass = 1f;
+    [SerializeField, Tooltip("in astronomical mass unit")] private float mass = 1f;
 
     //In kilograms
     public float convertedMass { get; private set; }
 
-    //[SerializeField] private Vector3 m_Position= new Vector3( 1f, 0f, 0f );
-
     [SerializeField] private AstralObject m_CenterOfEllipse;
 
-    [SerializeField] private Vector3 m_Velocity = Vector3.zero;
+    [SerializeField] Vector3 velocity = Vector3.zero;
     [SerializeField, Min(0F)] private float m_Eccentricity;
 
     //In meters
@@ -41,9 +39,9 @@ public class AstralObject : MonoBehaviour
 
     private void ConvertUnits()
     {
-        convertedMass = m_Mass * globals.amu2kg;
+        convertedMass = mass * globals.amu2kg;
         convertedPosition = transform.position * (globals.adu2m * globals.unity2astronomy);
-        convertedVelocity = m_Velocity * (globals.asu2ms);
+        convertedVelocity = velocity * (globals.asu2ms);
     }
 
     private void Awake()
@@ -73,9 +71,9 @@ public class AstralObject : MonoBehaviour
         //Here to compute the velocity at aphelion
         if (m_CenterOfEllipse)
         {
-            m_Velocity.z = m_CenterOfEllipse.m_Velocity.z + Mathf.Sqrt(globals.universalGravityConst * m_CenterOfEllipse.convertedMass * (1f - m_Eccentricity) / ((convertedPosition - m_CenterOfEllipse.convertedPosition).magnitude * (1f + m_Eccentricity))) / globals.asu2ms;
+            velocity.z = m_CenterOfEllipse.velocity.z + Mathf.Sqrt(globals.universalGravityConst * m_CenterOfEllipse.convertedMass * (1f - m_Eccentricity) / ((convertedPosition - m_CenterOfEllipse.convertedPosition).magnitude * (1f + m_Eccentricity))) / globals.asu2ms;
         }
-        convertedVelocity = m_Velocity * globals.asu2ms;
+        convertedVelocity = velocity * globals.asu2ms;
     }
 
     private void OnValidate()
@@ -126,12 +124,17 @@ public class AstralObject : MonoBehaviour
         ProcessPosition();
     }
 
-    public void ComputeField(List<AstralObject> _everyActors)
+    public void ComputeFieldPosition(List<AstralObject> _everyActors)
     {
         convertedPosition += (convertedVelocity + 0.5f * acceleration * (globals.timeStep)) * (globals.timeStep);
+    }
+    public void ComputeFieldForces(List<AstralObject> _everyActors)
+    {
+        
         //Reposition the planet
         Vector3 newAcceleration = ComputeAcceleration(globals.astralActors);
-        convertedVelocity += (acceleration + newAcceleration) * 0.5f * (globals.timeStep);
+        Vector3 vector3 = (acceleration + newAcceleration);
+        convertedVelocity += vector3 * 0.5f * (globals.timeStep);
         acceleration = newAcceleration;
     }
 
@@ -140,7 +143,7 @@ public class AstralObject : MonoBehaviour
         Vector3 newAcceleration = Vector3.zero;
         foreach (AstralObject influence in _everyActors)
         {
-            if (influence == this)
+            if (influence == this /*|| influence.m_CenterOfEllipse == this*/)
                 continue;
             Vector3 oneStarToAnother = influence.convertedPosition - convertedPosition;
             newAcceleration += oneStarToAnother * (influence.convertedMass * Mathf.Pow(oneStarToAnother.sqrMagnitude, -1.5f));
@@ -159,18 +162,18 @@ public class AstralObject : MonoBehaviour
         AstralObject otherAstral;
         if (!other.gameObject.TryGetComponent(out otherAstral))
         {
-            if (otherAstral.m_Mass > m_Mass)
+            if (otherAstral.mass > mass)
             {
-                float ratio = m_Mass / otherAstral.m_Mass;
-                otherAstral.m_Mass += m_Mass;
+                float ratio = mass / otherAstral.mass;
+                otherAstral.mass += mass;
                 otherAstral.convertedMass += convertedMass;
                 otherAstral.m_originalSize *= ratio;
                 Destroy(this);
             }
             else
             {
-                float ratio = otherAstral.m_Mass / m_Mass;
-                m_Mass += otherAstral.m_Mass;
+                float ratio = otherAstral.mass / mass;
+                mass += otherAstral.mass;
                 convertedMass += otherAstral.convertedMass;
                 m_originalSize *= ratio;
                 Destroy(otherAstral);

@@ -10917,7 +10917,7 @@ MonoBehaviour:
   m_Mass: 0.0123
   m_CenterOfEllipse: {fileID: 252590116}
   m_Velocity: {x: 0, y: 0, z: 0}
-  m_Eccentricity: 0
+  m_Eccentricity: 0.0549
 --- !u!4 &2137400690 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4693579709242440, guid: f9a741bb8762344c6a2a9cb4217ef728, type: 3}

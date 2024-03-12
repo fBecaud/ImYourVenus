@@ -92,7 +92,12 @@ public class Globals : MonoBehaviour
             foreach (AstralObject obj in astralActors)
             {
                 if (obj == sun) continue;
-                obj.ComputeField(astralActors);
+                obj.ComputeFieldPosition(astralActors);
+            }
+            foreach (AstralObject obj in astralActors)
+            {
+                if (obj == sun) continue;
+                obj.ComputeFieldForces(astralActors);
             }
         }
     }
