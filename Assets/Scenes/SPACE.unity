@@ -505,7 +505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 14.536
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.04726
@@ -2867,7 +2867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 0.815
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.00678
@@ -3545,7 +3545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 317.8
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.04839
@@ -4218,7 +4218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 17.147
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.0086
@@ -4324,7 +4324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 95.152
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.0539
@@ -4856,7 +4856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 0.055
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.2056
@@ -10036,7 +10036,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 333060.4
   m_CenterOfEllipse: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0
@@ -10468,7 +10468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 0.107
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.09339
@@ -11430,7 +11430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  mass: 1
+  mass: 0.0123
   m_CenterOfEllipse: {fileID: 252590116}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.0549
