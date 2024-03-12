@@ -37,7 +37,7 @@ public class AstralObject : MonoBehaviour
 
     private Vector3 m_originalSize;
 
-    private void ConvertUnits()
+    public void ConvertUnits()
     {
         convertedMass = mass * globals.amu2kg;
         convertedPosition = transform.position * (globals.adu2m * globals.unity2astronomy);
