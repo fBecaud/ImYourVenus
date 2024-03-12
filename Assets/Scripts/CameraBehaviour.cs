@@ -19,14 +19,16 @@ public class CameraBehaviour : MonoBehaviour
         set { LockedText.enabled = value; }
     }
 
-    private NewPlanetPlacer NPP = null;
+    [SerializeField] private GameObject NewPlanetPlacerScript = null;
+
+    [SerializeField] private GameObject PlanetInfoScript = null;
 
     private void Start()
     {
         FreeCam = GetComponent<FreeFlyCamera>();
-        NPP = FindAnyObjectByType<NewPlanetPlacer>();
 
         if (FreeCam == null
+            || PlanetInfoScript == null || NewPlanetPlacerScript == null
             || LockedText == null || FreeText == null)
         {
             Debug.LogError("One or multiple field unset in CameraBehaviour");
@@ -75,7 +77,7 @@ public class CameraBehaviour : MonoBehaviour
 
     public void PlanetClicked(Transform _newDaddy)
     {
-        if (NPP.IsPlacingPlanet)
+        if (NewPlanetPlacerScript.GetComponent<NewPlanetPlacer>().IsPlacingPlanet)
             return;
 
         Parent = _newDaddy;
@@ -88,7 +90,9 @@ public class CameraBehaviour : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         IsLockedIn = true;
-        SwitchFreeCamMode();
+        //SwitchFreeCamMode();
+
+        PlanetInfoScript.GetComponent<PlanetInfo>().FollowPlanet(Parent.gameObject);
     }
 
     private void UnlockCam()
@@ -97,6 +101,8 @@ public class CameraBehaviour : MonoBehaviour
         {
             IsLockedIn = false;
             Parent = null;
+
+            PlanetInfoScript.GetComponent<PlanetInfo>().StopFollowPlanet();
         }
     }
 }
