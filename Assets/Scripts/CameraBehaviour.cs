@@ -3,16 +3,21 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraBehaviour : MonoBehaviour
 {
     private Transform Parent = null;
 
     private FreeFlyCamera FreeCam = null;
 
-    private bool IsLockedIn = false;
-
     [SerializeField] private TMP_Text LockedText = null;
     [SerializeField] private TMP_Text FreeText = null;
+
+    private bool IsLockedIn
+    {
+        get { return LockedText.enabled && Parent != null; }
+        set { LockedText.enabled = value; }
+    }
 
     private void Start()
     {
@@ -34,14 +39,15 @@ public class CameraBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (IsLockedIn && Parent != null)
-            transform.position =
-                new(Parent.position.x, transform.position.y, Parent.position.z);
+        if (IsLockedIn)
+        {
+            if (Input.GetMouseButtonDown(0)) // 0 -> left button
+                UnlockCam();
+            else
+                transform.LookAt(Parent.position);
+        }
 
-        if (IsLockedIn && Parent != null && Input.GetMouseButtonDown(0)) //Input.GetKeyDown(KeyCode.Escape))
-            UnlockCam();
-
-        if (Input.GetMouseButtonDown(1) || Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonDown(1) || Input.GetMouseButtonUp(1)) // 1 -> right button
             SwitchFreeCamMode();
     }
 
@@ -67,21 +73,23 @@ public class CameraBehaviour : MonoBehaviour
     {
         Parent = _newDaddy;
 
-        StartCoroutine(LockCam());
+        if (!IsLockedIn)
+            StartCoroutine(LockCam());
     }
 
     private IEnumerator LockCam()
     {
         yield return new WaitForEndOfFrame();
         IsLockedIn = true;
-        LockedText.enabled = true;
+        SwitchFreeCamMode();
     }
 
     private void UnlockCam()
     {
-        IsLockedIn = false;
-        LockedText.enabled = false;
-
-        Parent = null;
+        if (IsLockedIn)
+        {
+            IsLockedIn = false;
+            Parent = null;
+        }
     }
 }
