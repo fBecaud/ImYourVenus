@@ -12,14 +12,14 @@ public class AstralObject : MonoBehaviour
     //
     SphereCollider m_SphereCollider;
     [SerializeField] private Globals globals;
-    [SerializeField, Tooltip("in astronomical mass unit")] private float mass = 1f;
+    [SerializeField, Tooltip("in astronomical mass unit")] public float mass = 1f;
 
     //In kilograms
     public float convertedMass { get; private set; }
 
     [SerializeField] private AstralObject m_CenterOfEllipse;
 
-    [SerializeField] Vector3 velocity = Vector3.zero;
+    [SerializeField] public Vector3 velocity = Vector3.zero;
     [SerializeField, Min(0F)] private float m_Eccentricity;
 
     //In meters
