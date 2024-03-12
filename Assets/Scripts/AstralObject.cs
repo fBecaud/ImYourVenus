@@ -10,7 +10,8 @@ using UnityEngine.Android;
 public class AstralObject : MonoBehaviour
 {
     //
-    SphereCollider m_SphereCollider;
+    private SphereCollider m_SphereCollider;
+
     [SerializeField] private Globals globals;
     [SerializeField, Tooltip("in astronomical mass unit")] public float mass = 1f;
 
@@ -60,6 +61,7 @@ public class AstralObject : MonoBehaviour
         }
         m_SphereCollider.isTrigger = true;
     }
+
     private void OnDestroy()
     {
         globals.astralActors.Remove(this);
@@ -74,6 +76,7 @@ public class AstralObject : MonoBehaviour
             velocity.z = m_CenterOfEllipse.velocity.z + Mathf.Sqrt(globals.universalGravityConst * m_CenterOfEllipse.convertedMass * (1f - m_Eccentricity) / ((convertedPosition - m_CenterOfEllipse.convertedPosition).magnitude * (1f + m_Eccentricity))) / globals.asu2ms;
         }
         convertedVelocity = velocity * globals.asu2ms;
+        Resize();
     }
 
     private void OnValidate()
@@ -87,7 +90,6 @@ public class AstralObject : MonoBehaviour
 
     private void Update()
     {
-        Resize();
     }
 
     private void Resize()
@@ -124,11 +126,12 @@ public class AstralObject : MonoBehaviour
         ProcessPosition();
     }
 
-        //Reposition the planet
+    //Reposition the planet
     public void ComputeFieldPosition(List<AstralObject> _everyActors)
     {
         convertedPosition += (convertedVelocity + 0.5f * acceleration * (globals.timeStep)) * (globals.timeStep);
     }
+
     public void ComputeFieldForces(List<AstralObject> _everyActors)
     {
         Vector3 newAcceleration = ComputeAcceleration(globals.astralActors);
