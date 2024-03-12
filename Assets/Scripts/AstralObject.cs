@@ -126,12 +126,17 @@ public class AstralObject : MonoBehaviour
         ProcessPosition();
     }
 
-    public void ComputeField(List<AstralObject> _everyActors)
+    public void ComputeFieldPosition(List<AstralObject> _everyActors)
     {
         convertedPosition += (convertedVelocity + 0.5f * acceleration * (globals.timeStep)) * (globals.timeStep);
+    }
+    public void ComputeFieldForces(List<AstralObject> _everyActors)
+    {
+        
         //Reposition the planet
         Vector3 newAcceleration = ComputeAcceleration(globals.astralActors);
-        convertedVelocity += (acceleration + newAcceleration) * 0.5f * (globals.timeStep);
+        Vector3 vector3 = (acceleration + newAcceleration);
+        convertedVelocity += vector3 * 0.5f * (globals.timeStep);
         acceleration = newAcceleration;
     }
 
@@ -140,7 +145,7 @@ public class AstralObject : MonoBehaviour
         Vector3 newAcceleration = Vector3.zero;
         foreach (AstralObject influence in _everyActors)
         {
-            if (influence == this)
+            if (influence == this /*|| influence.m_CenterOfEllipse == this*/)
                 continue;
             Vector3 oneStarToAnother = influence.convertedPosition - convertedPosition;
             newAcceleration += oneStarToAnother * (influence.convertedMass * Mathf.Pow(oneStarToAnother.sqrMagnitude, -1.5f));
