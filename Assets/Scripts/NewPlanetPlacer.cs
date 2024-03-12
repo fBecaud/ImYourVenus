@@ -1,7 +1,7 @@
 using System.Collections;
-using UnityEngine;
 using TMPro;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class NewPlanetPlacer : MonoBehaviour
@@ -12,8 +12,32 @@ public class NewPlanetPlacer : MonoBehaviour
 
     [SerializeField] private Button CancelButton = null;
 
-    [SerializeField] private TMP_InputField NewWeight = null;
-    [SerializeField] private TMP_InputField NewSpeed = null;
+    [SerializeField] private TMP_InputField NewMassInput = null;
+    [SerializeField] private TMP_InputField NewSpeedInputX = null;
+    [SerializeField] private TMP_InputField NewSpeedInputZ = null;
+
+    private float NewMass
+    {
+        get
+        {
+            string input = NewMassInput.text.ToString();
+            return (float)(input.Length > 0 ? System.Convert.ToDouble(input) : 0f);
+        }
+    }
+
+    private Vector3 NewSpeed
+    {
+        get
+        {
+            string inputX = NewSpeedInputX.text.ToString();
+            string inputZ = NewSpeedInputZ.text.ToString();
+            return new(
+                (float)(inputX.Length > 0 ? System.Convert.ToDouble(inputX) : 0f),
+                0f,
+                (float)(inputZ.Length > 0 ? System.Convert.ToDouble(inputZ) : 0f)
+                );
+        }
+    }
 
     [SerializeField] private TMP_Text ErrorTxt = null;
     [SerializeField] private float ErrorDisplayTime = 8f;
@@ -46,7 +70,7 @@ public class NewPlanetPlacer : MonoBehaviour
     {
         if (PlaceButton == null || CancelButton == null
             || ErrorTxt == null || InfoTxt == null
-            || NewWeight == null || NewSpeed == null
+            || NewMassInput == null || NewSpeedInputX == null || NewSpeedInputZ == null
             || TrailsPrefab == null
             || NewPlanetsPrefabs.Count == 0)
         {
@@ -75,10 +99,9 @@ public class NewPlanetPlacer : MonoBehaviour
     private void OnPlaceTask()
     {
         // Check if any field is empty
-        if (NewWeight.text.Length == 0 || NewSpeed.text.Length == 0)
+        if (NewMass == 0 || NewSpeed.magnitude == 0f)
         {
-            ErrorTxt.gameObject.SetActive(true);
-            StartCoroutine(ClearErrorTxt());
+            StartCoroutine(ErrorDisplay());
             return;
         }
         // else proceed
@@ -93,7 +116,7 @@ public class NewPlanetPlacer : MonoBehaviour
 
         NewPlanetToPlace = Instantiate(NewPlanetsPrefabs_ToUse[NewPlanetId]);
 
-        Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
         NewPlanetToPlace.transform.position =
             new Vector3(MouseWorldPos.x, 0f, MouseWorldPos.z);
         NewPlanetToPlace.transform.localScale = NewPlanetScale;
@@ -101,8 +124,9 @@ public class NewPlanetPlacer : MonoBehaviour
         StartCoroutine(FollowMouse());
     }
 
-    private IEnumerator ClearErrorTxt()
+    private IEnumerator ErrorDisplay()
     {
+        ErrorTxt.gameObject.SetActive(true);
         yield return new WaitForSeconds(ErrorDisplayTime);
         ErrorTxt.gameObject.SetActive(false);
     }
@@ -127,10 +151,11 @@ public class NewPlanetPlacer : MonoBehaviour
             {
                 //NewPlanetToPlace.GetComponent<PGSolidPlanet>().RandomizePlanet(true); // delete if never used
                 var AstralScript = NewPlanetToPlace.AddComponent<AstralObject>();
+                AstralScript.mass = NewMass;
+                AstralScript.velocity = NewSpeed;
+                AstralScript.ConvertUnits();
 
-                // TODO set script vars
-
-                var Trails = Instantiate(TrailsPrefab, NewPlanetToPlace.transform);
+                _ = Instantiate(TrailsPrefab, NewPlanetToPlace.transform);
 
                 NewPlanetToPlace = null;
                 InfoTxt.gameObject.SetActive(false);
@@ -160,7 +185,8 @@ public class NewPlanetPlacer : MonoBehaviour
         IsPlacingPlanet = !Mode;
 
         InfoTxt.gameObject.SetActive(!Mode);
-        NewWeight.interactable = NewSpeed.interactable = Mode;
+        NewMassInput.interactable = NewSpeedInputX.interactable =
+            NewSpeedInputZ.interactable = Mode;
 
         PlaceButton.gameObject.SetActive(Mode);
         CancelButton.gameObject.SetActive(!Mode);

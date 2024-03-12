@@ -19,11 +19,15 @@ public class CameraBehaviour : MonoBehaviour
         set { LockedText.enabled = value; }
     }
 
+    private NewPlanetPlacer NPP = null;
+
     private void Start()
     {
         FreeCam = GetComponent<FreeFlyCamera>();
+        NPP = FindAnyObjectByType<NewPlanetPlacer>();
 
-        if (FreeCam == null || LockedText == null || FreeText == null)
+        if (FreeCam == null
+            || LockedText == null || FreeText == null)
         {
             Debug.LogError("One or multiple field unset in CameraBehaviour");
 #if UNITY_EDITOR
@@ -47,7 +51,7 @@ public class CameraBehaviour : MonoBehaviour
                 transform.LookAt(Parent.position);
         }
 
-        if (Input.GetMouseButtonDown(1) || Input.GetMouseButtonUp(1)) // 1 -> right button
+        if ((Input.GetMouseButtonDown(1) || Input.GetMouseButtonUp(1))) // 1 -> right button
             SwitchFreeCamMode();
     }
 
@@ -71,6 +75,9 @@ public class CameraBehaviour : MonoBehaviour
 
     public void PlanetClicked(Transform _newDaddy)
     {
+        if (NPP.IsPlacingPlanet)
+            return;
+
         Parent = _newDaddy;
 
         if (!IsLockedIn)
