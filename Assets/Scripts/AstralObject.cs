@@ -122,7 +122,6 @@ public class AstralObject : MonoBehaviour
     private void FixedUpdate()
     {
         ProcessPosition();
-        //CheckCollision(gameObject);
     }
 
     //Reposition the planet
@@ -156,41 +155,6 @@ public class AstralObject : MonoBehaviour
     private void OnMouseDown()
     {
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
-    }
-
-    //Check if colliders touching
-    bool CheckCollision(GameObject obj)
-    {
-        SphereCollider objCollider = obj.GetComponent<SphereCollider>();
-        Collider[] touching = Physics.OverlapSphere(objCollider.bounds.center, objCollider.radius);
-        //print(touching.Length);
-        foreach (Collider touch in touching)
-        {
-            if (touch.gameObject == gameObject)
-                continue;
-            print("Collision");
-            AstralObject otherAstral;
-            if (touch.gameObject.TryGetComponent(out otherAstral))
-            {
-                if (otherAstral.mass > mass)
-                {
-                    float ratio = mass / otherAstral.mass;
-                    otherAstral.mass += mass;
-                    otherAstral.convertedMass += convertedMass;
-                    otherAstral.m_originalSize *= ratio;
-                    Destroy(gameObject);
-                }
-                else
-                {
-                    float ratio = otherAstral.mass / mass;
-                    mass += otherAstral.mass;
-                    convertedMass += otherAstral.convertedMass;
-                    m_originalSize *= ratio;
-                    Destroy(otherAstral.gameObject);
-                }
-            }
-        }
-        return (true);
     }
     private void OnTriggerEnter(Collider other)
     {
