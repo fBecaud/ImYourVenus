@@ -47,7 +47,7 @@ public class AstralObject : MonoBehaviour
 
     private void Awake()
     {
-        bool hasCollider = TryGetComponent<SphereCollider>(out m_SphereCollider);
+        bool hasCollider = TryGetComponent(out m_SphereCollider);
         globals = FindObjectOfType<Globals>();
         globals.astralActors.Add(this);
         ConvertUnits();
@@ -59,6 +59,8 @@ public class AstralObject : MonoBehaviour
             m_SphereCollider.enabled = true;
             m_SphereCollider.radius = 1f;
         }
+        gameObject.AddComponent<Rigidbody>();
+
         m_SphereCollider.isTrigger = true;
     }
 
@@ -86,12 +88,8 @@ public class AstralObject : MonoBehaviour
             globals = FindObjectOfType<Globals>();
 
         ConvertUnits();
+        print("Change a value");
     }
-
-    private void Update()
-    {
-    }
-
     private void Resize()
     {
         if (m_CenterOfEllipse && m_CenterOfEllipse != globals.sun)
@@ -124,6 +122,7 @@ public class AstralObject : MonoBehaviour
     private void FixedUpdate()
     {
         ProcessPosition();
+        //CheckCollision(gameObject);
     }
 
     //Reposition the planet
@@ -159,10 +158,46 @@ public class AstralObject : MonoBehaviour
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
     }
 
+    //Check if colliders touching
+    bool CheckCollision(GameObject obj)
+    {
+        SphereCollider objCollider = obj.GetComponent<SphereCollider>();
+        Collider[] touching = Physics.OverlapSphere(objCollider.bounds.center, objCollider.radius);
+        //print(touching.Length);
+        foreach (Collider touch in touching)
+        {
+            if (touch.gameObject == gameObject)
+                continue;
+            print("Collision");
+            AstralObject otherAstral;
+            if (touch.gameObject.TryGetComponent(out otherAstral))
+            {
+                if (otherAstral.mass > mass)
+                {
+                    float ratio = mass / otherAstral.mass;
+                    otherAstral.mass += mass;
+                    otherAstral.convertedMass += convertedMass;
+                    otherAstral.m_originalSize *= ratio;
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    float ratio = otherAstral.mass / mass;
+                    mass += otherAstral.mass;
+                    convertedMass += otherAstral.convertedMass;
+                    m_originalSize *= ratio;
+                    Destroy(otherAstral.gameObject);
+                }
+            }
+        }
+        return (true);
+    }
     private void OnTriggerEnter(Collider other)
     {
+
+        print("Collision");
         AstralObject otherAstral;
-        if (!other.gameObject.TryGetComponent(out otherAstral))
+        if (other.gameObject.TryGetComponent(out otherAstral))
         {
             if (otherAstral.mass > mass)
             {
@@ -170,7 +205,7 @@ public class AstralObject : MonoBehaviour
                 otherAstral.mass += mass;
                 otherAstral.convertedMass += convertedMass;
                 otherAstral.m_originalSize *= ratio;
-                Destroy(this);
+                Destroy(gameObject);
             }
             else
             {
@@ -178,7 +213,7 @@ public class AstralObject : MonoBehaviour
                 mass += otherAstral.mass;
                 convertedMass += otherAstral.convertedMass;
                 m_originalSize *= ratio;
-                Destroy(otherAstral);
+                Destroy(otherAstral.gameObject);
             }
         }
     }

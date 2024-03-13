@@ -9,6 +9,8 @@ public class VectorialField : MonoBehaviour
     //Could be a Vec3 to be non-square
     [SerializeField, Min(0f)] private float m_Density = 100f;
     [SerializeField] private float m_MaxSizeVector = 1f;
+    [SerializeField] private float m_Zoom = 100000f;
+
     [SerializeField] private GameObject m_ArrrowPrefab;
     [SerializeField] private bool m_bIgnoreSun = true;
 
@@ -51,25 +53,25 @@ public class VectorialField : MonoBehaviour
         {
            Vector3 acceleration  = ComputeAcceleration(go.transform.position);
             go.transform.LookAt(go.transform.position + acceleration.normalized);
-            float size = Mathf.Max(acceleration.magnitude, m_MaxSizeVector / m_Density);
+            float size = Mathf.Min(acceleration.magnitude * m_Zoom, m_MaxSizeVector / m_Density);
             go.transform.localScale = new Vector3(size, size, size);
         }
     }
-    private Vector3 ComputeAcceleration(Vector3 _localPosition)
+    private Vector3 ComputeAcceleration(Vector3 _positionUnity)
     {
         Vector3 newAcceleration = Vector3.zero;
         foreach (AstralObject influence in m_Globals.astralActors)
         {
-            float minDistance = 100 * (m_Globals.adu2m * m_Globals.unity2astronomy);
+            //float minDistance = 100 * (m_Globals.adu2m * m_Globals.unity2astronomy);
             if (m_bIgnoreSun && influence == m_Globals.sun)
                 continue;
-            Vector3 toStar = influence.convertedPosition - _localPosition * (m_Globals.adu2m * m_Globals.unity2astronomy);
-            float sqrMag = toStar.sqrMagnitude;
-            if (sqrMag > minDistance * minDistance)
-                continue;
-            newAcceleration += toStar * (influence.convertedMass * Mathf.Pow(sqrMag, -1.5f));
+            Vector3 toStar = influence.convertedPosition - _positionUnity * (m_Globals.adu2m * m_Globals.unity2astronomy);
+            double sqrMag = toStar.sqrMagnitude;
+            //if (sqrMag > minDistance * minDistance)
+                //continue;
+            newAcceleration += toStar * (float)((double)influence.convertedMass * System.Math.Pow(sqrMag, -1.5));
         }
-        newAcceleration *= m_Globals.universalGravityConst;
+        newAcceleration /= 10000f;// *= m_Globals.universalGravityConst;
         return newAcceleration;
     }
 }
