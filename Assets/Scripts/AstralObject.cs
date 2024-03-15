@@ -155,6 +155,7 @@ public class AstralObject : MonoBehaviour
     private void OnMouseDown()
     {
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
+        globals.selectedActor = this;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -171,14 +172,7 @@ public class AstralObject : MonoBehaviour
                 otherAstral.m_originalSize *= ratio;
                 Destroy(gameObject);
             }
-            else
-            {
-                float ratio = otherAstral.mass / mass;
-                mass += otherAstral.mass;
-                convertedMass += otherAstral.convertedMass;
-                m_originalSize *= ratio;
-                Destroy(otherAstral.gameObject);
-            }
+            //else we let the smaller object handles the collision and thus its destruction
         }
     }
 }

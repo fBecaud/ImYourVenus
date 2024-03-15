@@ -467,7 +467,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4799057029891002, guid: c91342f6e3afc48fd958056404ead345, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 4799057029891002, guid: c91342f6e3afc48fd958056404ead345, type: 3}
       propertyPath: m_LocalPosition.z
@@ -479,15 +479,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4799057029891002, guid: c91342f6e3afc48fd958056404ead345, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4799057029891002, guid: c91342f6e3afc48fd958056404ead345, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4799057029891002, guid: c91342f6e3afc48fd958056404ead345, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4799057029891002, guid: c91342f6e3afc48fd958056404ead345, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1513,6 +1513,7 @@ MonoBehaviour:
   asu2ms: 1000
   universalGravityConst: 6.6743e-11
   astralActors: []
+  selectedActor: {fileID: 0}
   sun: {fileID: 1587796327}
   m_TimeDivision: 2
   m_StepPerTick: 2
@@ -3264,7 +3265,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 1e+9
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -3292,7 +3293,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: 0, y: 190, z: -30}
+  m_LocalPosition: {x: 0, y: 50, z: -30}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -11921,11 +11922,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Globals: {fileID: 396314247}
   m_3D: 0
-  m_Density: 100
+  m_Density: {x: 40, y: 40, z: 4}
   m_MaxSizeVector: 100
   m_Zoom: 1
+  m_LogScale: 1
   m_ArrrowPrefab: {fileID: 5598610701369545315, guid: 1a26bb662631e214fb476636f03589ba, type: 3}
   m_bIgnoreSun: 1
+  displayField: 1
+  displayLines: 0
 --- !u!4 &2075965680
 Transform:
   m_ObjectHideFlags: 0
@@ -12594,8 +12598,8 @@ SceneRoots:
   - {fileID: 1810151826}
   - {fileID: 1030443311}
   - {fileID: 1321296697}
-  - {fileID: 89461218}
   - {fileID: 185937537}
+  - {fileID: 89461218}
   - {fileID: 1115624078}
   - {fileID: 2131685319}
   - {fileID: 963194228}

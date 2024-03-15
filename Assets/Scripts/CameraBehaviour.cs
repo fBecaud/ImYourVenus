@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
     private Transform Parent = null;
-
+    private Vector3 m_Offset;
     private FreeFlyCamera FreeCam = null;
 
     [SerializeField] private TMP_Text LockedText = null;
@@ -50,13 +51,21 @@ public class CameraBehaviour : MonoBehaviour
             if (Input.GetMouseButtonDown(0)) // 0 -> left button
                 UnlockCam();
             else
+            {
                 transform.LookAt(Parent.position);
+                if (FreeCam.enabled)
+                    m_Offset = transform.position - Parent.position;
+            }
         }
 
         if ((Input.GetMouseButtonDown(1) || Input.GetMouseButtonUp(1))) // 1 -> right button
             SwitchFreeCamMode();
     }
-
+    private void FixedUpdate()
+    {
+        if (IsLockedIn && !FreeCam.enabled)
+            transform.position = Parent.position + m_Offset;
+    }
     public void SwitchFreeCamMode()
     {
         if (FreeCam.enabled) // If freecam enabled -> disable it
@@ -93,6 +102,7 @@ public class CameraBehaviour : MonoBehaviour
         //SwitchFreeCamMode();
 
         PlanetInfoScript.GetComponent<PlanetInfo>().FollowPlanet(Parent.gameObject);
+        m_Offset = transform.position - Parent.transform.position;
     }
 
     private void UnlockCam()

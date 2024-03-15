@@ -22,6 +22,8 @@ public class Globals : MonoBehaviour
     [SerializeField] public float universalGravityConst = 6.6743e-11F;
 
     [SerializeField] public List<AstralObject> astralActors;
+    [SerializeField] public AstralObject selectedActor;
+    
     [SerializeField] public AstralObject sun;
 
     enum TimeDivision
