@@ -13,6 +13,7 @@ public class AstralObject : MonoBehaviour
     private SphereCollider m_SphereCollider;
 
     [SerializeField] private Globals globals;
+    [SerializeField] private VectorialField m_VectorialField;
     [SerializeField, Tooltip("in astronomical mass unit")] public float mass = 1f;
 
     //In kilograms
@@ -48,7 +49,11 @@ public class AstralObject : MonoBehaviour
     private void Awake()
     {
         bool hasCollider = TryGetComponent(out m_SphereCollider);
-        globals = FindObjectOfType<Globals>();
+        if (!globals)
+            globals = FindObjectOfType<Globals>();
+        if (!m_VectorialField)
+            m_VectorialField = FindObjectOfType<VectorialField>();
+
         globals.astralActors.Add(this);
         ConvertUnits();
         m_originalSize = transform.localScale;
@@ -156,6 +161,8 @@ public class AstralObject : MonoBehaviour
     {
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
         globals.selectedActor = this;
+        m_VectorialField.transform.parent = this.transform;
+        m_VectorialField.transform.localPosition = Vector3.zero;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -170,6 +177,8 @@ public class AstralObject : MonoBehaviour
                 otherAstral.mass += mass;
                 otherAstral.convertedMass += convertedMass;
                 otherAstral.m_originalSize *= ratio;
+                if (gameObject == globals.selectedActor)
+                    globals.selectedActor = this;
                 Destroy(gameObject);
             }
             //else we let the smaller object handles the collision and thus its destruction

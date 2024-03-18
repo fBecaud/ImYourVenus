@@ -547,6 +547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 14.536
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -1003,6 +1004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 1
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -2922,6 +2924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 0.815
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -3606,6 +3609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 317.8
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -4416,6 +4420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 17.147
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -4660,6 +4665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 95.152
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -5332,6 +5338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 0.055
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -10658,6 +10665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 333060.4
   m_CenterOfEllipse: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
@@ -11152,6 +11160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 0.107
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -11921,15 +11930,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Globals: {fileID: 396314247}
-  m_3D: 0
+  m_bIgnoreSun: 0
   m_Density: {x: 40, y: 40, z: 4}
-  m_MaxSizeVector: 100
-  m_Zoom: 1
+  m_3D: 1
   m_LogScale: 1
-  m_ArrrowPrefab: {fileID: 5598610701369545315, guid: 1a26bb662631e214fb476636f03589ba, type: 3}
-  m_bIgnoreSun: 1
+  m_Zoom: 1
+  m_MaxSizeVector: 100
   displayField: 1
-  displayLines: 0
+  m_ArrrowPrefab: {fileID: 5598610701369545315, guid: 1a26bb662631e214fb476636f03589ba, type: 3}
+  m_LineModel: {fileID: 4952193525126788113, guid: b48124547e51d1640a13f1847843792d, type: 3}
+  displayLines: 1
+  LineNb: 25
+  LineNbHorizontal: 5
+  LineNbVertical: 5
+  maxSuccesiveLines: 100
+  maxDistLines: 100000
+  step: 1
 --- !u!4 &2075965680
 Transform:
   m_ObjectHideFlags: 0
@@ -12576,6 +12592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
+  m_VectorialField: {fileID: 0}
   mass: 0.0123
   m_CenterOfEllipse: {fileID: 252590116}
   velocity: {x: 0, y: 0, z: 0}

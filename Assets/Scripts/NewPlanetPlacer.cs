@@ -119,7 +119,7 @@ public class NewPlanetPlacer : MonoBehaviour
         Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
         NewPlanetToPlace.transform.position =
             new Vector3(MouseWorldPos.x, 0f, MouseWorldPos.z);
-        NewPlanetToPlace.transform.localScale = NewPlanetScale;
+        NewPlanetToPlace.transform.localScale = NewPlanetScale * NewMass;
 
         StartCoroutine(FollowMouse());
     }
