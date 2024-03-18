@@ -7,7 +7,6 @@ public class AstralObject : MonoBehaviour
 
     [SerializeField] private Globals globals;
     [SerializeField] private VectorialField m_VectorialField;
-    [SerializeField, Tooltip("in astronomical mass unit")] public float mass = 1f;
 
     [Tooltip("in astronomical mass unit")] public float mass = 1f;
 
@@ -36,9 +35,9 @@ public class AstralObject : MonoBehaviour
 
     public void ConvertUnits()
     {
-        ConvertedMass = mass * m_Globals.amu2kg;
-        ConvertedPosition = transform.position * (m_Globals.adu2m * m_Globals.unity2astronomy);
-        ConvertedVelocity = velocity * (m_Globals.asu2ms);
+        ConvertedMass = mass * globals.amu2kg;
+        ConvertedPosition = transform.position * (globals.adu2m * globals.unity2astronomy);
+        ConvertedVelocity = velocity * (globals.asu2ms);
     }
 
     private void Awake()
@@ -66,7 +65,7 @@ public class AstralObject : MonoBehaviour
 
     private void OnDestroy()
     {
-        m_Globals.astralActors.Remove(this);
+        globals.astralActors.Remove(this);
     }
 
     private void Start()
@@ -76,19 +75,19 @@ public class AstralObject : MonoBehaviour
         {
             velocity.z =
                 m_CenterOfEllipse.velocity.z + Mathf.Sqrt(
-                m_Globals.universalGravityConst * m_CenterOfEllipse.ConvertedMass * (1f - m_Eccentricity)
+                globals.universalGravityConst * m_CenterOfEllipse.ConvertedMass * (1f - m_Eccentricity)
                 / ((ConvertedPosition - m_CenterOfEllipse.ConvertedPosition).magnitude * (1f + m_Eccentricity))
-                ) / m_Globals.asu2ms;
+                ) / globals.asu2ms;
         }
-        ConvertedVelocity = velocity * m_Globals.asu2ms;
+        ConvertedVelocity = velocity * globals.asu2ms;
         Resize();
     }
 
     private void OnValidate()
     {
         //Security for 1st validation
-        if (!m_Globals)
-            m_Globals = FindObjectOfType<Globals>();
+        if (!globals)
+            globals = FindObjectOfType<Globals>();
 
         ConvertUnits();
         print("Change a value");
@@ -96,13 +95,13 @@ public class AstralObject : MonoBehaviour
 
     private void Resize()
     {
-        if (m_CenterOfEllipse && m_CenterOfEllipse != m_Globals.sun)
+        if (m_CenterOfEllipse && m_CenterOfEllipse != globals.sun)
         {
             m_SizeFactor = m_CenterOfEllipse.m_SizeFactor;
         }
         else
         {
-            m_SizeFactor = (m_Globals.mainCamera.transform.position - transform.position).magnitude;
+            m_SizeFactor = (globals.mainCamera.transform.position - transform.position).magnitude;
             m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f / m_originalSize.magnitude, 10f / m_originalSize.magnitude);
         }
         transform.localScale = m_originalSize * m_SizeFactor;
@@ -111,14 +110,14 @@ public class AstralObject : MonoBehaviour
 
     private void ProcessPosition()
     {
-        if (!m_CenterOfEllipse || m_CenterOfEllipse == m_Globals.sun)
+        if (!m_CenterOfEllipse || m_CenterOfEllipse == globals.sun)
         {
-            transform.position = ConvertedPosition / (m_Globals.adu2m * m_Globals.unity2astronomy);
+            transform.position = ConvertedPosition / (globals.adu2m * globals.unity2astronomy);
         }
         else
         {
             Vector3 orbitVector = ConvertedPosition - m_CenterOfEllipse.ConvertedPosition;
-            transform.position = (m_CenterOfEllipse.ConvertedPosition + orbitVector * m_SizeFactor) / (m_Globals.adu2m * m_Globals.unity2astronomy);
+            transform.position = (m_CenterOfEllipse.ConvertedPosition + orbitVector * m_SizeFactor) / (globals.adu2m * globals.unity2astronomy);
         }
     }
 
@@ -130,14 +129,14 @@ public class AstralObject : MonoBehaviour
     //Reposition the planet
     public void ComputeFieldPosition(List<AstralObject> _everyActors)
     {
-        ConvertedPosition += (ConvertedVelocity + m_Globals.TimeStep * 0.5f * Acceleration) * m_Globals.TimeStep;
+        ConvertedPosition += (ConvertedVelocity + globals.TimeStep * 0.5f * Acceleration) * globals.TimeStep;
     }
 
     public void ComputeFieldForces(List<AstralObject> _everyActors)
     {
-        Vector3 newAcceleration = ComputeAcceleration(m_Globals.astralActors);
+        Vector3 newAcceleration = ComputeAcceleration(globals.astralActors);
         Vector3 vector3 = (Acceleration + newAcceleration);
-        ConvertedVelocity += m_Globals.TimeStep * 0.5f * vector3;
+        ConvertedVelocity += globals.TimeStep * 0.5f * vector3;
         Acceleration = newAcceleration;
     }
 
@@ -151,7 +150,7 @@ public class AstralObject : MonoBehaviour
             Vector3 oneStarToAnother = influence.ConvertedPosition - ConvertedPosition;
             newAcceleration += oneStarToAnother * (influence.ConvertedMass * Mathf.Pow(oneStarToAnother.sqrMagnitude, -1.5f));
         }
-        newAcceleration *= m_Globals.universalGravityConst;
+        newAcceleration *= globals.universalGravityConst;
         return newAcceleration;
     }
 

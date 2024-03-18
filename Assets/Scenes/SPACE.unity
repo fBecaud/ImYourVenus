@@ -1145,7 +1145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   globals: {fileID: 396314247}
-  m_VectorialField: {fileID: 0}
+  m_VectorialField: {fileID: 2075965679}
   mass: 1
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
@@ -1695,7 +1695,7 @@ MonoBehaviour:
   selectedActor: {fileID: 0}
   sun: {fileID: 1587796327}
   m_TimeDivision: 2
-  m_StepPerTick: 1
+  StepPerTick: 1
 --- !u!4 &396314248
 Transform:
   m_ObjectHideFlags: 0
