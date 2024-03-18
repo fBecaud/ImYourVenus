@@ -196,11 +196,11 @@ public class VectorialField : MonoBehaviour
             //float minDistance = 100 * (m_Globals.adu2m * m_Globals.unity2astronomy);
             if (m_bIgnoreSun && influence == m_Globals.sun)
                 continue;
-            Vector3 toStar = influence.convertedPosition - _positionUnity * (m_Globals.adu2m * m_Globals.unity2astronomy);
+            Vector3 toStar = influence.ConvertedPosition - _positionUnity * (m_Globals.adu2m * m_Globals.unity2astronomy);
             double sqrMag = toStar.sqrMagnitude;
             if (sqrMag < minSqDistance)
                 continue;
-            newAcceleration += toStar * (float)((double)influence.convertedMass * System.Math.Pow(sqrMag, -1.5));
+            newAcceleration += toStar * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMag, -1.5));
         }
 
         return newAcceleration;

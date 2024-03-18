@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class NewPlanetPlacer : MonoBehaviour
 {
-    [Header("New Planet")]
     // UI VARS
     [SerializeField] private Button PlaceButton = null;
 
@@ -74,7 +73,7 @@ public class NewPlanetPlacer : MonoBehaviour
             || TrailsPrefab == null
             || NewPlanetsPrefabs.Count == 0)
         {
-            Debug.LogError("One or multiple field unset in NewPlanetPlacer");
+            Debug.LogError("One or multiple field(s) unset in NewPlanetPlacer");
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
 #endif
@@ -178,9 +177,9 @@ public class NewPlanetPlacer : MonoBehaviour
         SwitchModes(PlacementMode);
     }
 
-    private void SwitchModes(bool Mode)
     // bool PlacementMode (starting mode)
     // bool CancelMode (when place button pressed)
+    private void SwitchModes(bool Mode)
     {
         IsPlacingPlanet = !Mode;
 
