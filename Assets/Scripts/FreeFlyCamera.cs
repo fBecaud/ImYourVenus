@@ -11,23 +11,19 @@ public class FreeFlyCamera : MonoBehaviour
     #region UI
 
     [Space]
-
     [SerializeField]
     [Tooltip("The script is currently active")]
     private bool _active = true;
 
     [Space]
-
-    [SerializeField]
     [Tooltip("Camera rotation by mouse movement is active")]
-    private bool _enableRotation = true;
+    public bool _enableRotation = true;
 
     [SerializeField]
     [Tooltip("Sensitivity of mouse rotation")]
     private float _mouseSense = 1.8f;
 
     [Space]
-
     [SerializeField]
     [Tooltip("Camera zooming in/out by 'Mouse Scroll Wheel' is active")]
     private bool _enableTranslation = true;
@@ -37,7 +33,6 @@ public class FreeFlyCamera : MonoBehaviour
     private float _translationSpeed = 55f;
 
     [Space]
-
     [SerializeField]
     [Tooltip("Camera movement by 'W','A','S','D','Q','E' keys is active")]
     private bool _enableMovement = true;
@@ -63,7 +58,6 @@ public class FreeFlyCamera : MonoBehaviour
     private KeyCode _moveDown = KeyCode.Q;
 
     [Space]
-
     [SerializeField]
     [Tooltip("Acceleration at camera movement is active")]
     private bool _enableSpeedAcceleration = true;
@@ -73,7 +67,6 @@ public class FreeFlyCamera : MonoBehaviour
     private float _speedAccelerationFactor = 1.5f;
 
     [Space]
-
     [SerializeField]
     [Tooltip("This keypress will move the camera to initialization position")]
     private KeyCode _initPositonButton = KeyCode.R;
@@ -89,13 +82,14 @@ public class FreeFlyCamera : MonoBehaviour
     private Vector3 _initRotation;
 
 #if UNITY_EDITOR
+
     private void OnValidate()
     {
         if (_boostedSpeed < _movementSpeed)
             _boostedSpeed = _movementSpeed;
     }
-#endif
 
+#endif
 
     private void Start()
     {

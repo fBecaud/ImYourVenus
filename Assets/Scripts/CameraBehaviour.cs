@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -8,7 +7,7 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
     private Transform Parent = null;
-    private Vector3 m_Offset;
+    private Vector3 Offset = Vector3.zero;
     private FreeFlyCamera FreeCam = null;
 
     [SerializeField] private TMP_Text LockedText = null;
@@ -20,19 +19,19 @@ public class CameraBehaviour : MonoBehaviour
         set { LockedText.enabled = value; }
     }
 
-    [SerializeField] private GameObject NewPlanetPlacerScript = null;
+    [SerializeField] private GameObject NewPlanetPlacerScriptLocation = null;
 
-    [SerializeField] private GameObject PlanetInfoScript = null;
+    [SerializeField] private GameObject PlanetInfoScriptLocation = null;
 
     private void Start()
     {
         FreeCam = GetComponent<FreeFlyCamera>();
 
         if (FreeCam == null
-            || PlanetInfoScript == null || NewPlanetPlacerScript == null
+            || PlanetInfoScriptLocation == null || NewPlanetPlacerScriptLocation == null
             || LockedText == null || FreeText == null)
         {
-            Debug.LogError("One or multiple field unset in CameraBehaviour");
+            Debug.LogError("One or multiple field(s) unset in CameraBehaviour");
 #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
 #endif
@@ -48,24 +47,28 @@ public class CameraBehaviour : MonoBehaviour
     {
         if (IsLockedIn)
         {
-            if (Input.GetMouseButtonDown(0)) // 0 -> left button
+            if (Input.GetMouseButtonDown(0) && transform.position - Parent.position != Offset) // 0 -> left button
                 UnlockCam();
             else
             {
                 transform.LookAt(Parent.position);
                 if (FreeCam.enabled)
-                    m_Offset = transform.position - Parent.position;
+                    Offset = transform.position - Parent.position;
             }
         }
 
-        if ((Input.GetMouseButtonDown(1) || Input.GetMouseButtonUp(1))) // 1 -> right button
+        if (!FreeCam.enabled && Input.GetMouseButtonDown(1)) // 1 -> right button
+            SwitchFreeCamMode();
+        else if (FreeCam.enabled && Input.GetMouseButtonUp(1))
             SwitchFreeCamMode();
     }
+
     private void FixedUpdate()
     {
-        if (IsLockedIn && !FreeCam.enabled)
-            transform.position = Parent.position + m_Offset;
+        if (IsLockedIn && !FreeCam.enabled) // needs to be in fixedUpdate for smooth camera mouvements
+            transform.position = Parent.position + Offset;
     }
+
     public void SwitchFreeCamMode()
     {
         if (FreeCam.enabled) // If freecam enabled -> disable it
@@ -86,13 +89,13 @@ public class CameraBehaviour : MonoBehaviour
 
     public void PlanetClicked(Transform _newDaddy)
     {
-        if (NewPlanetPlacerScript.GetComponent<NewPlanetPlacer>().IsPlacingPlanet)
+        if (NewPlanetPlacerScriptLocation.GetComponent<NewPlanetPlacer>().IsPlacingPlanet)
             return;
 
         Parent = _newDaddy;
+        Offset = transform.position - Parent.transform.position;
 
-        if (!IsLockedIn)
-            StartCoroutine(LockCam());
+        StartCoroutine(LockCam());
     }
 
     private IEnumerator LockCam()
@@ -100,9 +103,9 @@ public class CameraBehaviour : MonoBehaviour
         yield return new WaitForEndOfFrame();
         IsLockedIn = true;
         //SwitchFreeCamMode();
+        FreeCam._enableRotation = false;
 
-        PlanetInfoScript.GetComponent<PlanetInfo>().FollowPlanet(Parent.gameObject);
-        m_Offset = transform.position - Parent.transform.position;
+        PlanetInfoScriptLocation.GetComponent<PlanetInfo>().FollowPlanet(Parent.gameObject);
     }
 
     private void UnlockCam()
@@ -112,7 +115,8 @@ public class CameraBehaviour : MonoBehaviour
             IsLockedIn = false;
             Parent = null;
 
-            PlanetInfoScript.GetComponent<PlanetInfo>().StopFollowPlanet();
+            FreeCam._enableRotation = true;
+            PlanetInfoScriptLocation.GetComponent<PlanetInfo>().StopFollowPlanet();
         }
     }
 }

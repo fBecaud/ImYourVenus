@@ -85,7 +85,7 @@ public class VectorialField : MonoBehaviour
             for (int i = 0; i < 360; i += 360 / LineNb)
             {
                 float angle = i * Mathf.Deg2Rad;
-                Vector3 startPoint = new Vector3(m_Globals.selectedActor.convertedPosition.x +Mathf.Cos(angle), m_Globals.selectedActor.convertedPosition.y + Mathf.Sin(angle), m_Globals.selectedActor.convertedPosition.z);
+                Vector3 startPoint = new Vector3(m_Globals.selectedActor.ConvertedPosition.x +Mathf.Cos(angle), m_Globals.selectedActor.ConvertedPosition.y + Mathf.Sin(angle), m_Globals.selectedActor.ConvertedPosition.z);
                 DrawAFieldLine(startPoint);
             }
         }
@@ -115,11 +115,11 @@ public class VectorialField : MonoBehaviour
             //float minDistance = 100 * (m_Globals.adu2m * m_Globals.unity2astronomy);
             if (m_bIgnoreSun && influence == m_Globals.sun)
                 continue;
-            Vector3 toStar = influence.convertedPosition - _positionUnity * (m_Globals.adu2m * m_Globals.unity2astronomy);
+            Vector3 toStar = influence.ConvertedPosition - _positionUnity * (m_Globals.adu2m * m_Globals.unity2astronomy);
             double sqrMag = toStar.sqrMagnitude;
             if (sqrMag < minSqDistance)
                 continue;
-            newAcceleration += toStar * (float)((double)influence.convertedMass * System.Math.Pow(sqrMag, -1.5));
+            newAcceleration += toStar * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMag, -1.5));
         }
 
         return newAcceleration;
