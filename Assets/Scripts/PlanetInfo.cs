@@ -1,6 +1,8 @@
+using System.Collections;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlanetInfo : MonoBehaviour
 {
@@ -12,11 +14,22 @@ public class PlanetInfo : MonoBehaviour
     [SerializeField] private TMP_Text MassDisplay = null;
     [SerializeField] private TMP_Text PositionDisplay = null;
 
-    private AstralObject Planet = null;
+    [SerializeField] private Toggle OrbitToggle = null;
+
+    public bool IsObitingActive
+    { get { return OrbitToggle.isOn && IsFollowingPlanet; } }
+
+    public bool IsFollowingPlanet
+    { get { return Planet != null; } }
+
+    public AstralObject Planet
+    { get; private set; }
+
+    private CameraBehaviour CameraScript = null;
 
     private void Start()
     {
-        if (InfoDisplay == null || DisplayDisplay == null
+        if (InfoDisplay == null || DisplayDisplay == null || OrbitToggle == null
             || VelocityDisplay == null || MassDisplay == null || PositionDisplay == null)
         {
             Debug.LogError("One or multiple field(s) unset in NewPlanetPlacer");
@@ -25,7 +38,20 @@ public class PlanetInfo : MonoBehaviour
 #endif
             Application.Quit();
         }
+
+        CameraScript = FindAnyObjectByType<CameraBehaviour>();
+
         SwitchModes();
+
+        OrbitToggle.onValueChanged.AddListener(OrbitMode);
+    }
+
+    private void OrbitMode(bool _newValue)
+    {
+        if (Planet && _newValue)
+            StartCoroutine(CameraScript.LockCam());
+        else if (!_newValue)
+            CameraScript.UnlockCam();
     }
 
     private void LateUpdate()
@@ -70,8 +96,10 @@ public class PlanetInfo : MonoBehaviour
             FollowPlanet(AstralObj);
     }
 
-    public void StopFollowPlanet()
+    public IEnumerator StopFollowPlanet()
     {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         Planet = null;
         SwitchModes();
     }
@@ -82,8 +110,9 @@ public class PlanetInfo : MonoBehaviour
 
         InfoDisplay.enabled = enable;
         DisplayDisplay.SetActive(!enable);
-        VelocityDisplay.enabled = !enable;
-        MassDisplay.enabled = !enable;
-        PositionDisplay.enabled = !enable;
+        VelocityDisplay.gameObject.SetActive(!enable);
+        MassDisplay.gameObject.SetActive(!enable);
+        PositionDisplay.gameObject.SetActive(!enable);
+        OrbitToggle.gameObject.SetActive(!enable);
     }
 }
