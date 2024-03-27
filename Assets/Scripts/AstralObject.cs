@@ -158,7 +158,7 @@ public class AstralObject : MonoBehaviour
     {
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
         globals.selectedActor = this;
-        m_VectorialField.transform.parent = this.transform;
+        m_VectorialField.Retarget(transform);
         m_VectorialField.transform.localPosition = Vector3.zero;
     }
 
