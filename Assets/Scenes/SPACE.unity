@@ -5828,6 +5828,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 199907745297058340, guid: b4201d402613a4464b35c805dafcca62, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 205182777401487052, guid: b4201d402613a4464b35c805dafcca62, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -13941,7 +13945,7 @@ GameObject:
   - component: {fileID: 2075965680}
   - component: {fileID: 2075965679}
   m_Layer: 0
-  m_Name: VectorField
+  m_Name: VectorFieldController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13961,13 +13965,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Globals: {fileID: 396314247}
   m_bIgnoreSun: 0
-  m_Density: {x: 40, y: 40, z: 4}
+  m_GridSize: 1
+  m_GridPosition: {x: 0, y: 0, z: 0}
+  m_Density: 100
   m_3D: 1
   m_LogScale: 1
   m_Zoom: 1
-  m_MaxSizeVector: 100
-  displayField: 1
-  m_ArrrowPrefab: {fileID: 5598610701369545315, guid: 1a26bb662631e214fb476636f03589ba, type: 3}
+  displayField: 0
+  m_ArrrowPrefab: {fileID: 9013638940889411661, guid: 1676b70a03b39b5419aab66949994f31, type: 3}
   m_LineModel: {fileID: 4952193525126788113, guid: b48124547e51d1640a13f1847843792d, type: 3}
   displayLines: 1
   LineNb: 25

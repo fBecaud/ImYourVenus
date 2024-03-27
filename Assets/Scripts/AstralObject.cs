@@ -6,7 +6,7 @@ public class AstralObject : MonoBehaviour
     private SphereCollider m_SphereCollider;
 
     [SerializeField] private Globals globals;
-    [SerializeField] private VectorialField m_VectorialField;
+    [SerializeField] private VectorialFieldController m_VectorialField;
 
     [Tooltip("in astronomical mass unit")] public float mass = 1f;
 
@@ -46,7 +46,7 @@ public class AstralObject : MonoBehaviour
         if (!globals)
             globals = FindObjectOfType<Globals>();
         if (!m_VectorialField)
-            m_VectorialField = FindObjectOfType<VectorialField>();
+            m_VectorialField = FindObjectOfType<VectorialFieldController>();
 
         globals.astralActors.Add(this);
         ConvertUnits();
@@ -105,7 +105,6 @@ public class AstralObject : MonoBehaviour
             m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f / m_originalSize.magnitude, 10f / m_originalSize.magnitude);
         }
         transform.localScale = m_originalSize * m_SizeFactor;
-        //m_SphereCollider.radius = 1f / m_SizeFactor;
     }
 
     private void ProcessPosition()
@@ -159,11 +158,21 @@ public class AstralObject : MonoBehaviour
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
         globals.selectedActor = this;
         m_VectorialField.Retarget(transform);
-        m_VectorialField.transform.localPosition = Vector3.zero;
     }
-
+    private void OnMouseEnter()
+    {
+        //Glow Growth
+        transform.GetChild(0).transform.localScale *= 2f; // Glow is 0
+    }
+    private void OnMouseExit()
+    {
+        //Glow Shrink
+        transform.GetChild(0).transform.localScale *= 0.5f; // Glow is 0
+    }
     private void OnTriggerEnter(Collider other)
     {
+        if ((other.ClosestPoint(transform.position).sqrMagnitude / m_SizeFactor / m_SizeFactor) > 1f) // check if the collision happens because of rendering effects
+        { return; }
         print("Collision");
         if (other.gameObject.TryGetComponent(out AstralObject otherAstral))
         {
