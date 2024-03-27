@@ -148,7 +148,6 @@ public class NewPlanetPlacer : MonoBehaviour
             // Right mouse button pressed -> place planet
             if (Input.GetMouseButton(1))
             {
-                //NewPlanetToPlace.GetComponent<PGSolidPlanet>().RandomizePlanet(true); // delete if never used
                 var AstralScript = NewPlanetToPlace.AddComponent<AstralObject>();
                 AstralScript.mass = NewMass;
                 AstralScript.velocity = NewSpeed;

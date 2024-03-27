@@ -2,26 +2,25 @@ using System.Collections;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Camera))]
 public class CameraBehaviour : MonoBehaviour
 {
-    private Transform Parent = null;
     private Vector3 Offset = Vector3.zero;
     private FreeFlyCamera FreeCam = null;
 
     [SerializeField] private TMP_Text LockedText = null;
     [SerializeField] private TMP_Text FreeText = null;
 
-    private bool IsLockedIn
-    {
-        get { return LockedText.enabled && Parent != null; }
-        set { LockedText.enabled = value; }
-    }
-
     [SerializeField] private GameObject NewPlanetPlacerScriptLocation = null;
 
     [SerializeField] private GameObject PlanetInfoScriptLocation = null;
+
+    private NewPlanetPlacer NewPlanetPlacerScript = null;
+    private PlanetInfo PlanetInfoScript = null;
+
+    private Transform ParentPlanet = null;
 
     private void Start()
     {
@@ -38,6 +37,18 @@ public class CameraBehaviour : MonoBehaviour
             Application.Quit();
         }
 
+        NewPlanetPlacerScript = NewPlanetPlacerScriptLocation.GetComponent<NewPlanetPlacer>();
+        PlanetInfoScript = PlanetInfoScriptLocation.GetComponent<PlanetInfo>();
+
+        if (NewPlanetPlacerScript == null || PlanetInfoScript == null)
+        {
+            Debug.LogError("One or multiple scripts not found in CameraBehaviour");
+#if UNITY_EDITOR
+            EditorApplication.ExitPlaymode();
+#endif
+            Application.Quit();
+        }
+
         LockedText.enabled = false;
         FreeText.enabled = false;
         FreeCam.enabled = false;
@@ -45,28 +56,38 @@ public class CameraBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (IsLockedIn)
+        if (PlanetInfoScript.IsFollowingPlanet)
         {
-            if (Input.GetMouseButtonDown(0) && transform.position - Parent.position != Offset) // 0 -> left button
-                UnlockCam();
-            else
+            if (!EventSystem.current.IsPointerOverGameObject()
+                && Input.GetMouseButtonDown(0/*left button*/)
+                && !(LockPlanet_IsRunning || UnlockPlanet_IsRunning)
+                )
+                StartCoroutine(UnlockPlanet());
+            else if (ParentPlanet && PlanetInfoScript.IsObitingActive)
             {
-                transform.LookAt(Parent.position);
+                transform.LookAt(ParentPlanet.position);
                 if (FreeCam.enabled)
-                    Offset = transform.position - Parent.position;
+                    Offset = transform.position - ParentPlanet.position;
             }
         }
 
-        if (!FreeCam.enabled && Input.GetMouseButtonDown(1)) // 1 -> right button
+        if (!FreeCam.enabled
+            && Input.GetMouseButtonDown(1/*right button*/)
+            )
             SwitchFreeCamMode();
-        else if (FreeCam.enabled && Input.GetMouseButtonUp(1))
+        else if (FreeCam.enabled
+            && Input.GetMouseButtonUp(1/*right button*/)
+            )
             SwitchFreeCamMode();
     }
 
     private void FixedUpdate()
     {
-        if (IsLockedIn && !FreeCam.enabled) // needs to be in fixedUpdate for smooth camera mouvements
-            transform.position = Parent.position + Offset;
+        if (PlanetInfoScript.IsObitingActive
+            && !FreeCam.enabled
+            && ParentPlanet
+            )
+            transform.position = ParentPlanet.position + Offset; // needs to be in fixedUpdate for smooth camera mouvements
     }
 
     public void SwitchFreeCamMode()
@@ -81,7 +102,7 @@ public class CameraBehaviour : MonoBehaviour
         else
         {
             FreeCam.enabled = true;
-            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Locked; // done by script
             Cursor.visible = false;
             FreeText.enabled = true;
         }
@@ -89,34 +110,69 @@ public class CameraBehaviour : MonoBehaviour
 
     public void PlanetClicked(Transform _newDaddy)
     {
-        if (NewPlanetPlacerScriptLocation.GetComponent<NewPlanetPlacer>().IsPlacingPlanet)
+        if (NewPlanetPlacerScript.IsPlacingPlanet)
             return;
 
-        Parent = _newDaddy;
-        Offset = transform.position - Parent.transform.position;
-
-        StartCoroutine(LockCam());
-    }
-
-    private IEnumerator LockCam()
-    {
-        yield return new WaitForEndOfFrame();
-        IsLockedIn = true;
-        //SwitchFreeCamMode();
-        FreeCam._enableRotation = false;
-
-        PlanetInfoScriptLocation.GetComponent<PlanetInfo>().FollowPlanet(Parent.gameObject);
-    }
-
-    private void UnlockCam()
-    {
-        if (IsLockedIn)
+#if UNITY_EDITOR
+        if (_newDaddy == null)
         {
-            IsLockedIn = false;
-            Parent = null;
-
-            FreeCam._enableRotation = true;
-            PlanetInfoScriptLocation.GetComponent<PlanetInfo>().StopFollowPlanet();
+            Debug.LogError("PlanetClicked called but new daddy is null");
+            return;
         }
+#endif
+        if (UnlockPlanet_IsRunning)
+            StopCoroutine(UnlockPlanet());
+
+        ParentPlanet = _newDaddy;
+
+        if (PlanetInfoScript.IsObitingActive)
+            StartCoroutine(LockCam());
+        else
+            StartCoroutine(LockPlanet());
+    }
+
+    public bool LockCam_IsRunning { get; private set; }
+
+    public IEnumerator LockCam()
+    {
+        LockCam_IsRunning = true;
+        StartCoroutine(LockPlanet());
+        yield return new WaitForEndOfFrame();
+        LockedText.enabled = true;
+        FreeCam._enableRotation = false;
+        LockCam_IsRunning = false;
+    }
+
+    public bool LockPlanet_IsRunning { get; private set; }
+
+    private IEnumerator LockPlanet()
+    {
+        LockPlanet_IsRunning = true;
+        yield return new WaitForEndOfFrame();
+        PlanetInfoScript.FollowPlanet(ParentPlanet.gameObject);
+        Offset = transform.position - ParentPlanet.transform.position;
+        LockPlanet_IsRunning = false;
+    }
+
+    public void UnlockCam()
+    {
+        if (!PlanetInfoScript.IsObitingActive)
+        {
+            FreeCam._enableRotation = true;
+            LockedText.enabled = false;
+        }
+    }
+
+    public bool UnlockPlanet_IsRunning { get; private set; }
+
+    private IEnumerator UnlockPlanet()
+    {
+        UnlockPlanet_IsRunning = true;
+        yield return new WaitForEndOfFrame();
+        StartCoroutine(PlanetInfoScript.StopFollowPlanet());
+        if (PlanetInfoScript.IsObitingActive)
+            UnlockCam();
+        ParentPlanet = null;
+        UnlockPlanet_IsRunning = false;
     }
 }
