@@ -14283,14 +14283,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Globals: {fileID: 396314247}
   m_bIgnoreSun: 0
-  m_GridSize: 1
+  m_GridSize: 100
   m_GridPosition: {x: 0, y: 0, z: 0}
   m_Density: 100
   m_3D: 1
   m_LogScale: 1
   m_Zoom: 1
-  displayField: 0
-  m_ArrrowPrefab: {fileID: 9013638940889411661, guid: 1676b70a03b39b5419aab66949994f31, type: 3}
+  displayField: 1
+  m_ArrrowPrefab: {fileID: 656066910410522721, guid: a5622fe2b14cee04085ad482a4a15b2e, type: 3}
   m_LineModel: {fileID: 4952193525126788113, guid: b48124547e51d1640a13f1847843792d, type: 3}
   displayLines: 1
   LineNb: 25
