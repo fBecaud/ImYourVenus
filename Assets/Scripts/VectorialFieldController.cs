@@ -12,12 +12,12 @@ public class VectorialFieldController : MonoBehaviour
     [SerializeField] private bool m_bIgnoreSun = true;
 
     [Header("Grid Settings")]
-    [SerializeField, Range(10f, 1000f)] private float m_GridSize = 100f;
+    [SerializeField, Range(10f, 6000f)] private float m_GridSize = 100f;
     [SerializeField] private Vector3 m_GridPosition = Vector3.zero;
 
 
     [Header("Field of Vector Settings")]
-    [SerializeField, Range(0f, 100f)] private uint m_Density = 20;
+    [SerializeField, Range(2f, 100f)] private uint m_Density = 20;
     [SerializeField] bool m_3D = false;
     [SerializeField] private bool m_LogScale;
     [SerializeField] private float m_Zoom = 10000f;
@@ -28,9 +28,10 @@ public class VectorialFieldController : MonoBehaviour
         set
         {
             if (value)
-            { 
-                InitVectors(); 
-                m_ArrowsParent.SetActive(true); }
+            {
+                InitVectors();
+                m_ArrowsParent.SetActive(true);
+            }
 
             else
                 HideArrows();
@@ -39,7 +40,7 @@ public class VectorialFieldController : MonoBehaviour
         }
     }
     [FormerlySerializedAs("bDisplayField")]
-    [field :SerializeField] private bool displayField = true;
+    [field: SerializeField] private bool displayField = true;
 
     List<GameObject> m_Arrows = new List<GameObject>();
     GameObject m_ArrowsParent;
@@ -140,12 +141,21 @@ public class VectorialFieldController : MonoBehaviour
     {
         m_ArrowsParent.SetActive(false);
     }
-    //private void OnValidate()
-    //{
-    //    if (!m_LinesParent)
-    //        m_LinesParent = new GameObject("Field of Lines");
-    //    ResetLineRenderer();
-    //}
+    private void OnValidate()
+    {
+        if (m_LinesParent != null)
+        {
+            m_LinesParent.SetActive(true);
+            ResetLineRenderer();
+            m_LinesParent.SetActive(displayLines);
+        }
+        if (m_ArrowsParent != null)
+        {
+            m_ArrowsParent.SetActive(true);
+            InitVectors();
+            m_ArrowsParent.SetActive(displayField);
+        }
+    }
     private void InitLineRenderers()
     {
         m_LineModel.positionCount = maxSuccesiveLines + 1;
@@ -156,7 +166,7 @@ public class VectorialFieldController : MonoBehaviour
         for (int i = m_Lines.Count(); i < LineNb; i++)
             InitLineRenderer();
         for (int i = 0; i < m_Lines.Count(); i++)
-            m_Lines[i].gameObject.SetActive(i<LineNb);
+            m_Lines[i].gameObject.SetActive(i < LineNb);
     }
 
     private void InitLineRenderer()
@@ -179,17 +189,21 @@ public class VectorialFieldController : MonoBehaviour
         {
             if (m_Density > 20)
                 m_Density = 20;
-            m_MaxSizeVector = m_GridSize / m_Density;
+            m_MaxSizeVector = 1f / m_Density;
         }
         else
         {
-            m_MaxSizeVector = m_GridSize / m_Density;
+            m_MaxSizeVector = 1f / m_Density;
         }
         int index = 0;
+        float gridStep = m_GridSize / (m_Density - 1);
+        float gridHalfSize = m_GridSize * 0.5f;
+        float _gridHalfSize = -gridHalfSize;
+
         if (m_3D)
-            for (float i = -m_GridSize * 0.5f; i <= m_GridSize * 0.5f; i += m_GridSize/ m_Density)
-                for (float j = -m_GridSize * 0.5f; j <= m_GridSize * 0.5f; j += m_GridSize / m_Density)
-                    for (float k = -m_GridSize * 0.5f; k <= m_GridSize * 0.5f; k += m_GridSize / m_Density)
+            for (float i = _gridHalfSize; i <= gridHalfSize; i += gridStep)
+                for (float j = _gridHalfSize; j <= gridHalfSize; j += gridStep)
+                    for (float k = _gridHalfSize; k <= gridHalfSize; k += gridStep)
                     {
                         Vector3 posArrow = m_ArrowsParent.transform.position - new Vector3(i, k, j);
                         if (m_Arrows.Count() > index)
@@ -205,8 +219,8 @@ public class VectorialFieldController : MonoBehaviour
                         index++;
                     }
         else
-            for (float i = -m_GridSize * 0.5f; i <= m_GridSize * 0.5f; i += m_GridSize / m_Density)
-                for (float j = -m_GridSize * 0.5f; j <= m_GridSize * 0.5f; j += m_GridSize/ m_Density)
+            for (float i = _gridHalfSize; i <= gridHalfSize; i += gridStep)
+                for (float j = _gridHalfSize; j <= gridHalfSize; j += gridStep)
                 {
                     Vector3 posArrow = m_ArrowsParent.transform.position - new Vector3(i, 0f, j);
                     if (m_Arrows.Count() > index)
@@ -244,9 +258,9 @@ public class VectorialFieldController : MonoBehaviour
                 Vector3 acceleration = ComputeAcceleration(go.transform.position);
                 float size;
                 if (m_LogScale)
-                    size = Mathf.Clamp(Mathf.Log10(1f + acceleration.magnitude * go.transform.parent.lossyScale.magnitude * m_Globals.universalGravityConst * m_Zoom), 0f, m_MaxSizeVector);
+                    size = Mathf.Clamp(Mathf.Log10(1f + acceleration.magnitude * go.transform.parent.lossyScale.magnitude * m_Globals.universalGravityConst), 0f, m_MaxSizeVector);
                 else
-                    size = Mathf.Clamp(acceleration.magnitude * m_Zoom / 10000f, 0f, m_MaxSizeVector);
+                    size = Mathf.Clamp(acceleration.magnitude / 10000f, 0f, m_MaxSizeVector);
                 if (size != 0f)
                 {
                     go.transform.LookAt(go.transform.position + acceleration.normalized);
@@ -254,10 +268,11 @@ public class VectorialFieldController : MonoBehaviour
                 else
                 { print("No Force"); };
 
-                go.transform.localScale = new Vector3(size, size, size);
+                go.transform.localScale = new Vector3(size, size, size) * m_Zoom;
             }
         }
         if (displayLines && m_Globals.selectedActor)
+
         {
             int index = 0;
             float convertedStep = step * m_Globals.unity2astronomy;
@@ -309,7 +324,7 @@ public class VectorialFieldController : MonoBehaviour
             currentPoint -= force.normalized * step;
             float sqrMag = (currentPoint - transform.position).sqrMagnitude;
             if (sqrMag > maxDistLines * maxDistLines)
-            return;
+                return;
             Color newColor2 = new Color(1f, ((float)(i + 1)) / maxSuccesiveLines, 0f, 1f);
 
             line.SetPosition(i + 1, currentPoint);

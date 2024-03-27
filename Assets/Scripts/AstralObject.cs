@@ -33,6 +33,7 @@ public class AstralObject : MonoBehaviour
 
     private Vector3 m_originalSize;
 
+    public bool isAsteroid = false;
     public void ConvertUnits()
     {
         ConvertedMass = mass * globals.amu2kg;
@@ -58,8 +59,8 @@ public class AstralObject : MonoBehaviour
             m_SphereCollider.enabled = true;
             m_SphereCollider.radius = 1f;
         }
-        gameObject.AddComponent<Rigidbody>();
-
+        Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
+         rigidbody.isKinematic = true;
         m_SphereCollider.isTrigger = true;
     }
 
@@ -80,6 +81,7 @@ public class AstralObject : MonoBehaviour
                 ) / globals.asu2ms;
         }
         ConvertedVelocity = velocity * globals.asu2ms;
+        if(!isAsteroid)
         Resize();
     }
 
@@ -102,7 +104,7 @@ public class AstralObject : MonoBehaviour
         else
         {
             m_SizeFactor = (globals.mainCamera.transform.position - transform.position).magnitude;
-            m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f / m_originalSize.magnitude, 10f / m_originalSize.magnitude);
+            m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f * m_originalSize.magnitude, 10f * m_originalSize.magnitude);
         }
         transform.localScale = m_originalSize * m_SizeFactor;
     }
@@ -123,6 +125,7 @@ public class AstralObject : MonoBehaviour
     private void FixedUpdate()
     {
         ProcessPosition();
+
     }
 
     //Reposition the planet
