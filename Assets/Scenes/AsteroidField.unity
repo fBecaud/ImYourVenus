@@ -7290,7 +7290,9 @@ MonoBehaviour:
   m_LogScale: 1
   m_Zoom: 10
   displayField: 1
-  m_ArrrowPrefab: {fileID: 656066910410522721, guid: a5622fe2b14cee04085ad482a4a15b2e, type: 3}
+  m_ArrowPrefab: {fileID: 656066910410522721, guid: a5622fe2b14cee04085ad482a4a15b2e, type: 3}
+  displayRotational: 1
+  m_RotArrowPrefab: {fileID: 656066910410522721, guid: e8840a2a31bc13448b6bdcac2bea8594, type: 3}
   m_LineModel: {fileID: 4952193525126788113, guid: b48124547e51d1640a13f1847843792d, type: 3}
   displayLines: 1
   LineNb: 25
@@ -7456,8 +7458,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 846368341036260610, guid: f663f4a4005b16344ba04c4c6fafc0d4, type: 3}
+      propertyPath: m_Radius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1641390067795534364, guid: f663f4a4005b16344ba04c4c6fafc0d4, type: 3}
       propertyPath: mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641390067795534364, guid: f663f4a4005b16344ba04c4c6fafc0d4, type: 3}
+      propertyPath: globals
+      value: 
+      objectReference: {fileID: 396314247}
+    - target: {fileID: 1641390067795534364, guid: f663f4a4005b16344ba04c4c6fafc0d4, type: 3}
+      propertyPath: isAsteroid
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1641390067795534364, guid: f663f4a4005b16344ba04c4c6fafc0d4, type: 3}

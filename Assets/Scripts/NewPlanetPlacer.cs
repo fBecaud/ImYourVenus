@@ -160,7 +160,8 @@ public class NewPlanetPlacer : MonoBehaviour
 
                 NewPlanetsPrefabs_ToUse.Remove(NewPlanetsPrefabs_ToUse[NewPlanetId]);
                 NewPlanetId = -1;
-
+                AstralScript.GetComponent<SphereCollider>().radius = 0.5f;
+                
                 SwitchModes(PlacementMode);
             }
 

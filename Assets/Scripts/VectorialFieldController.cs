@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
@@ -44,7 +45,30 @@ public class VectorialFieldController : MonoBehaviour
 
     List<GameObject> m_Arrows = new List<GameObject>();
     GameObject m_ArrowsParent;
-    [SerializeField] private GameObject m_ArrrowPrefab;
+    [SerializeField] private GameObject m_ArrowPrefab;
+    public bool bDisplayRotational
+    {
+        get => displayRotational;
+        set
+        {
+            if (value)
+            {
+                InitRotVectors();
+                m_RotArrowsParent.SetActive(true);
+            }
+
+            else
+                HideRotArrows();
+            Debug.Log("Hide Rotational");
+            displayRotational = value;
+        }
+    }
+    [FormerlySerializedAs("bDisplayRotational")]
+    [field: SerializeField] private bool displayRotational = true;
+
+    List<GameObject> m_RotArrows = new List<GameObject>();
+    GameObject m_RotArrowsParent;
+    [SerializeField] private GameObject m_RotArrowPrefab;
 
     [Header("Field of Lines Settings")]
     [SerializeField] LineRenderer m_LineModel;
@@ -82,13 +106,20 @@ public class VectorialFieldController : MonoBehaviour
 
     public void Retarget(Transform _newTarget)
     {
+
         m_ArrowsParent.SetActive(true);
         m_ArrowsParent.transform.parent = _newTarget;
         m_ArrowsParent.transform.localPosition = m_GridPosition;
         m_ArrowsParent.transform.localScale = new Vector3(m_GridSize, m_GridSize, m_GridSize);
         InitVectors();
-        if (!displayField)
-            m_ArrowsParent.SetActive(false);
+        m_ArrowsParent.SetActive(displayField);
+
+        m_RotArrowsParent.SetActive(true);
+        m_RotArrowsParent.transform.parent = _newTarget;
+        m_RotArrowsParent.transform.localPosition = m_GridPosition;
+        m_RotArrowsParent.transform.localScale = new Vector3(m_GridSize, m_GridSize, m_GridSize);
+        InitRotVectors();
+        m_RotArrowsParent.SetActive(displayRotational);
 
         m_LinesParent.SetActive(true);
         InitLineRenderers();
@@ -104,6 +135,12 @@ public class VectorialFieldController : MonoBehaviour
             m_ArrowsParent.transform.localScale = new Vector3(m_GridSize, m_GridSize, m_GridSize);
         }
         InitVectors();
+        if (!m_RotArrowsParent)
+        {
+            m_RotArrowsParent = new GameObject("Field of Rotational Vectors");
+            m_RotArrowsParent.transform.localScale = new Vector3(m_GridSize, m_GridSize, m_GridSize);
+        }
+        InitRotVectors();
         if (!m_LinesParent)
         {
             m_LinesParent = new GameObject("Field of Lines");
@@ -113,6 +150,7 @@ public class VectorialFieldController : MonoBehaviour
         if (!m_Globals.selectedActor)
         {
             HideArrows();
+            HideRotArrows();
             HideLines();
         }
     }
@@ -141,6 +179,10 @@ public class VectorialFieldController : MonoBehaviour
     {
         m_ArrowsParent.SetActive(false);
     }
+    private void HideRotArrows()
+    {
+        m_RotArrowsParent.SetActive(false);
+    }
     private void OnValidate()
     {
         if (m_LinesParent != null)
@@ -154,6 +196,12 @@ public class VectorialFieldController : MonoBehaviour
             m_ArrowsParent.SetActive(true);
             InitVectors();
             m_ArrowsParent.SetActive(displayField);
+        }
+        if (m_RotArrowsParent != null)
+        {
+            m_RotArrowsParent.SetActive(true);
+            InitVectors();
+            m_RotArrowsParent.SetActive(displayRotational);
         }
     }
     private void InitLineRenderers()
@@ -213,7 +261,7 @@ public class VectorialFieldController : MonoBehaviour
                         }
                         else
                         {
-                            GameObject go = Instantiate(m_ArrrowPrefab, m_ArrowsParent.transform.position + posArrow, Quaternion.identity, m_ArrowsParent.transform);
+                            GameObject go = Instantiate(m_ArrowPrefab, m_ArrowsParent.transform.position + posArrow, Quaternion.identity, m_ArrowsParent.transform);
                             m_Arrows.Add(go);
                         }
                         index++;
@@ -230,7 +278,7 @@ public class VectorialFieldController : MonoBehaviour
                     }
                     else
                     {
-                        GameObject go = Instantiate(m_ArrrowPrefab, m_ArrowsParent.transform.position + posArrow, Quaternion.identity, m_ArrowsParent.transform);
+                        GameObject go = Instantiate(m_ArrowPrefab, m_ArrowsParent.transform.position + posArrow, Quaternion.identity, m_ArrowsParent.transform);
                         m_Arrows.Add(go);
                     }
                     index++;
@@ -240,41 +288,119 @@ public class VectorialFieldController : MonoBehaviour
         if (!displayField)
             HideArrows();
     }
+    public void InitRotVectors()
+    {
+        if (m_3D)
+        {
+            if (m_Density > 20)
+                m_Density = 20;
+            m_MaxSizeVector = 1f / m_Density;
+        }
+        else
+        {
+            m_MaxSizeVector = 1f / m_Density;
+        }
+        int index = 0;
+        float gridStep = m_GridSize / (m_Density - 1);
+        float gridHalfSize = m_GridSize * 0.5f;
+        float _gridHalfSize = -gridHalfSize;
+
+        if (m_3D)
+            for (float i = _gridHalfSize; i <= gridHalfSize; i += gridStep)
+                for (float j = _gridHalfSize; j <= gridHalfSize; j += gridStep)
+                    for (float k = _gridHalfSize; k <= gridHalfSize; k += gridStep)
+                    {
+                        Vector3 posRotArrow = m_RotArrowsParent.transform.position - new Vector3(i, k, j);
+                        if (m_RotArrows.Count() > index)
+                        {
+                            m_RotArrows[index].SetActive(true);
+                            m_RotArrows[index].transform.position = posRotArrow;
+                        }
+                        else
+                        {
+                            GameObject go = Instantiate(m_RotArrowPrefab, m_RotArrowsParent.transform.position + posRotArrow, Quaternion.identity, m_RotArrowsParent.transform);
+                            m_RotArrows.Add(go);
+                        }
+                        index++;
+                    }
+        else
+            for (float i = _gridHalfSize; i <= gridHalfSize; i += gridStep)
+                for (float j = _gridHalfSize; j <= gridHalfSize; j += gridStep)
+                {
+                    Vector3 posRotArrow = m_RotArrowsParent.transform.position - new Vector3(i, 0f, j);
+                    if (m_RotArrows.Count() > index)
+                    {
+                        m_RotArrows[index].SetActive(true);
+                        m_RotArrows[index].transform.position = posRotArrow;
+                    }
+                    else
+                    {
+                        GameObject go = Instantiate(m_RotArrowPrefab, m_RotArrowsParent.transform.position + posRotArrow, Quaternion.identity, m_RotArrowsParent.transform);
+                        m_RotArrows.Add(go);
+                    }
+                    index++;
+                }
+        for (int i = index; i < m_RotArrows.Count; i++)
+            m_RotArrows[i].SetActive(false);
+        if (!displayField)
+            HideRotArrows();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         m_LogScale = !m_bIgnoreSun;
         InitVectors();
+        InitRotVectors();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (displayField)
+        if (displayField || displayRotational)
         {
-            foreach (GameObject go in m_Arrows)
+            float parentRescale = m_ArrowsParent.transform.lossyScale.magnitude * m_Globals.universalGravityConst;
+            for (int i = 0; i < m_Arrows.Count(); i++)
             {
-                Vector3 acceleration = ComputeAcceleration(go.transform.position);
+                Vector3 acceleration = ComputeAcceleration(m_Arrows[i].transform.position);
                 float size;
-                if (m_LogScale)
-                    size = Mathf.Clamp(Mathf.Log10(1f + acceleration.magnitude * go.transform.parent.lossyScale.magnitude * m_Globals.universalGravityConst), 0f, m_MaxSizeVector);
-                else
-                    size = Mathf.Clamp(acceleration.magnitude / 10000f, 0f, m_MaxSizeVector);
-                if (size != 0f)
+                float aMag = acceleration.magnitude;
+                if (displayField)
                 {
-                    go.transform.LookAt(go.transform.position + acceleration.normalized);
+                    if (m_LogScale)
+                        size = Mathf.Clamp(Mathf.Log10(1f + aMag * parentRescale), 0f, m_MaxSizeVector);
+                    else
+                        size = Mathf.Clamp(aMag / 10000f, 0f, m_MaxSizeVector);
+                    if (size != 0f)
+                    {
+                        m_Arrows[i].transform.LookAt(m_Arrows[i].transform.position + acceleration / aMag);
+                    }
+                    else
+                    { print("No Force"); };
+                    m_Arrows[i].transform.localScale = new Vector3(size, size, size) * m_Zoom;
                 }
-                else
-                { print("No Force"); };
+                if (displayRotational)
+                {
+                    Vector3 rotational = ComputeRotational(m_Arrows[i].transform.position, acceleration);
+                    float rMag = rotational.magnitude;
 
-                go.transform.localScale = new Vector3(size, size, size) * m_Zoom;
+                    if (m_LogScale)
+                        size = Mathf.Clamp(Mathf.Log10(1f + rMag * parentRescale), 0f, m_MaxSizeVector);
+                    else
+                        size = Mathf.Clamp(rMag / 10000f, 0f, m_MaxSizeVector);
+                    if (size != 0f)
+                    {
+                        m_RotArrows[i].transform.LookAt(m_RotArrows[i].transform.position + rotational / rMag);
+                    }
+                    else
+                    { print("No Force"); };
+                    m_RotArrows[i].transform.localScale = new Vector3(size, size, size) * m_Zoom;
+                }
             }
         }
         if (displayLines && m_Globals.selectedActor)
 
         {
-            int index = 0;
             float convertedStep = step * m_Globals.unity2astronomy;
 
             if (m_3D)
@@ -339,12 +465,13 @@ public class VectorialFieldController : MonoBehaviour
     {
         Vector3 newAcceleration = Vector3.zero;
         float minSqDistance = 1000f;
+        float distConverter = (m_Globals.adu2m * m_Globals.unity2astronomy);
         foreach (AstralObject influence in m_Globals.astralActors)
         {
             //float minDistance = 100 * (m_Globals.adu2m * m_Globals.unity2astronomy);
             if (m_bIgnoreSun && influence == m_Globals.sun)
                 continue;
-            Vector3 toStar = influence.ConvertedPosition - _positionUnity * (m_Globals.adu2m * m_Globals.unity2astronomy);
+            Vector3 toStar = influence.ConvertedPosition - _positionUnity * distConverter;
             double sqrMag = toStar.sqrMagnitude;
             if (sqrMag < minSqDistance)
                 continue;
@@ -352,5 +479,42 @@ public class VectorialFieldController : MonoBehaviour
         }
 
         return newAcceleration;
+    }
+
+    private Vector3 ComputeRotational(Vector3 _positionUnity, Vector3 _acceleration)
+    {
+        float step = 1;
+        Vector3 x_Increased = _positionUnity + new Vector3(step, 0f, 0f);
+        Vector3 y_Increased = _positionUnity + new Vector3(0f, step, 0f);
+        Vector3 z_Increased = _positionUnity + new Vector3(0f, 0f, step);
+
+        Vector3 newAccelerationX = Vector3.zero;
+        Vector3 newAccelerationY = Vector3.zero;
+        Vector3 newAccelerationZ = Vector3.zero;
+        float minSqDistance = 1000f;
+        float distConverter = (m_Globals.adu2m * m_Globals.unity2astronomy);
+        foreach (AstralObject influence in m_Globals.astralActors)
+        {
+            if (m_bIgnoreSun && influence == m_Globals.sun)
+                continue;
+            Vector3 toStarX = influence.ConvertedPosition - x_Increased * distConverter;
+            Vector3 toStarY = influence.ConvertedPosition - y_Increased * distConverter;
+            Vector3 toStarZ = influence.ConvertedPosition - z_Increased * distConverter;
+            double sqrMagX = toStarX.sqrMagnitude;
+            double sqrMagY = toStarY.sqrMagnitude;
+            double sqrMagZ = toStarZ.sqrMagnitude;
+            if (sqrMagX > minSqDistance)
+                newAccelerationX = toStarX * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMagX, -1.5));
+            if (sqrMagY > minSqDistance)
+                newAccelerationY = toStarY * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMagY, -1.5));
+            if (sqrMagZ > minSqDistance)
+                newAccelerationZ = toStarZ * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMagZ, -1.5));
+        }
+        Vector3 XDerivative = (newAccelerationX - _acceleration) /*/step*/; //Here step is one
+        Vector3 YDerivative = (newAccelerationY - _acceleration) /*/step*/; //Here step is one
+        Vector3 ZDerivative = (newAccelerationZ - _acceleration) /*/step*/; //Here step is one
+
+        Vector3 rotational = new Vector3(YDerivative.z - ZDerivative.y, ZDerivative.x - XDerivative.z, XDerivative.y - YDerivative.x);
+        return rotational;
     }
 }

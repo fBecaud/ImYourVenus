@@ -552,6 +552,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.04726
+  isAsteroid: 0
 --- !u!1 &130962506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,6 +1237,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.01671022
+  isAsteroid: 0
 --- !u!4 &252590118 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4643521465287934, guid: 300f80108a63f48618cb4a1c8b8c1e86, type: 3}
@@ -3961,6 +3963,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.00678
+  isAsteroid: 0
 --- !u!1 &915382753
 GameObject:
   m_ObjectHideFlags: 0
@@ -4796,6 +4799,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.04839
+  isAsteroid: 0
 --- !u!1 &1047270848
 GameObject:
   m_ObjectHideFlags: 0
@@ -5788,6 +5792,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.0086
+  isAsteroid: 0
 --- !u!1 &1298256187
 GameObject:
   m_ObjectHideFlags: 0
@@ -6112,6 +6117,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.0539
+  isAsteroid: 0
 --- !u!4 &1321296701 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4677324220665258, guid: b4201d402613a4464b35c805dafcca62, type: 3}
@@ -12171,6 +12177,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0
+  isAsteroid: 0
 --- !u!4 &1587796329 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1229251971759408710, guid: 5f776740c447e45afb25edbca842de92, type: 3}
@@ -13057,6 +13064,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 1587796327}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.09339
+  isAsteroid: 0
 --- !u!1 &1820637112
 GameObject:
   m_ObjectHideFlags: 0
@@ -14030,7 +14038,9 @@ MonoBehaviour:
   m_LogScale: 1
   m_Zoom: 10
   displayField: 1
-  m_ArrrowPrefab: {fileID: 656066910410522721, guid: a5622fe2b14cee04085ad482a4a15b2e, type: 3}
+  m_ArrowPrefab: {fileID: 656066910410522721, guid: a5622fe2b14cee04085ad482a4a15b2e, type: 3}
+  displayRotational: 1
+  m_RotArrowPrefab: {fileID: 656066910410522721, guid: e8840a2a31bc13448b6bdcac2bea8594, type: 3}
   m_LineModel: {fileID: 4952193525126788113, guid: b48124547e51d1640a13f1847843792d, type: 3}
   displayLines: 1
   LineNb: 25
@@ -14690,6 +14700,7 @@ MonoBehaviour:
   m_CenterOfEllipse: {fileID: 252590116}
   velocity: {x: 0, y: 0, z: 0}
   m_Eccentricity: 0.0549
+  isAsteroid: 0
 --- !u!4 &2137400690 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4693579709242440, guid: f9a741bb8762344c6a2a9cb4217ef728, type: 3}
@@ -14703,6 +14714,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1641390067795534364, guid: f663f4a4005b16344ba04c4c6fafc0d4, type: 3}
+      propertyPath: m_VectorialField
+      value: 
+      objectReference: {fileID: 2075965679}
     - target: {fileID: 1641390067795534364, guid: f663f4a4005b16344ba04c4c6fafc0d4, type: 3}
       propertyPath: m_CenterOfEllipse
       value: 

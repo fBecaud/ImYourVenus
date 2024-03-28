@@ -8,6 +8,8 @@ public class AstralObject : MonoBehaviour
     [SerializeField] private Globals globals;
     [SerializeField] private VectorialFieldController m_VectorialField;
 
+    AsteroidFieldGenerator m_AsteroidFieldGenerator;
+
     [Tooltip("in astronomical mass unit")] public float mass = 1f;
 
     //In kilograms
@@ -48,6 +50,8 @@ public class AstralObject : MonoBehaviour
             globals = FindObjectOfType<Globals>();
         if (!m_VectorialField)
             m_VectorialField = FindObjectOfType<VectorialFieldController>();
+        if (!m_AsteroidFieldGenerator)
+            m_AsteroidFieldGenerator = FindObjectOfType<AsteroidFieldGenerator>();
 
         globals.astralActors.Add(this);
         ConvertUnits();
@@ -60,13 +64,17 @@ public class AstralObject : MonoBehaviour
             m_SphereCollider.radius = 1f;
         }
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
-         rigidbody.isKinematic = true;
+        rigidbody.isKinematic = true;
         m_SphereCollider.isTrigger = true;
     }
 
     private void OnDestroy()
     {
         globals.astralActors.Remove(this);
+        if(isAsteroid) 
+        {
+            m_AsteroidFieldGenerator.Asteroids.Remove(this.gameObject);
+        }
     }
 
     private void Start()
@@ -81,8 +89,8 @@ public class AstralObject : MonoBehaviour
                 ) / globals.asu2ms;
         }
         ConvertedVelocity = velocity * globals.asu2ms;
-        if(!isAsteroid)
-        Resize();
+        if (!isAsteroid)
+            Resize();
     }
 
     private void OnValidate()
@@ -104,7 +112,7 @@ public class AstralObject : MonoBehaviour
         else
         {
             m_SizeFactor = (globals.mainCamera.transform.position - transform.position).magnitude;
-            m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f * m_originalSize.magnitude, 10f * m_originalSize.magnitude);
+            m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f / m_originalSize.magnitude, 10f / m_originalSize.magnitude);
         }
         transform.localScale = m_originalSize * m_SizeFactor;
     }
@@ -174,7 +182,7 @@ public class AstralObject : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if ((other.ClosestPoint(transform.position).sqrMagnitude / m_SizeFactor / m_SizeFactor) > 1f) // check if the collision happens because of rendering effects
+        if (!isAsteroid && (other.ClosestPoint(transform.position).sqrMagnitude / m_SizeFactor / m_SizeFactor) > 1f) // check if the collision happens because of rendering effects
         { return; }
         print("Collision");
         if (other.gameObject.TryGetComponent(out AstralObject otherAstral))
@@ -187,6 +195,7 @@ public class AstralObject : MonoBehaviour
                 otherAstral.m_originalSize *= ratio;
                 if (gameObject == globals.selectedActor)
                     globals.selectedActor = this;
+                gameObject.SetActive(false);
                 Destroy(gameObject);
             }
             //else we let the smaller object handles the collision and thus its destruction

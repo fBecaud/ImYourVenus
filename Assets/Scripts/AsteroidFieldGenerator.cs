@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 public class AsteroidFieldGenerator : MonoBehaviour
 {
@@ -29,22 +30,18 @@ public class AsteroidFieldGenerator : MonoBehaviour
     }
 
     void InitOneAsteroid()
+
     {
-        float x = Random.Range(-200f, 200f);
-        float y = Random.Range(-20f, 20f);
-        float z = Random.Range(-200f, 200f);
+        GameObject newAsteroid = Instantiate(m_AsteroidPrefab, new Vector3(1000f,1000f,1000f), Random.rotation, AsteroidsParent.transform);
+        newAsteroid.SetActive(false);
 
-        float size = Random.Range(0.001f, 10f);
-
-        GameObject newAsteroid = Instantiate(m_AsteroidPrefab, new Vector3(x, y, z), Random.rotation, AsteroidsParent.transform);
-        newAsteroid.transform.localScale = new Vector3(size, size, size);
-        Asteroids.Add(newAsteroid);
-        x = Random.Range(-2f, 2f);
-        y = Random.Range(-0.2f, .2f);
-        z = Random.Range(-2f, 2f);
         AstralObject astralInfos = newAsteroid.GetComponent<AstralObject>();
+        Asteroids.Add(newAsteroid);
+        float x = Random.Range(-2f, 2f);
+        float y = Random.Range(-0.2f, .2f);
+        float z = Random.Range(-2f, 2f);
+
         astralInfos.velocity = new Vector3(x, y, z);
-        astralInfos.mass = size;
         string name = "";
         char c = (char)('A' + Random.Range(0, 25));
         name += c;
@@ -57,7 +54,17 @@ public class AsteroidFieldGenerator : MonoBehaviour
         astralInfos.name = name;
         astralInfos.isAsteroid = true;
 
+        x = Random.Range(-200f, 200f);
+            y = Random.Range(-20f, 20f);
+            z = Random.Range(-200f, 200f);
+
+            float size = Random.Range(0.001f, 10f);
+
+            newAsteroid.transform.position = new Vector3(x, y, z);
+            newAsteroid.transform.localScale = new Vector3(size, size, size);
+            astralInfos.mass = size;
         newAsteroid.SetActive(true);
+
     }
     // Update is called once per frame
     void Update()
