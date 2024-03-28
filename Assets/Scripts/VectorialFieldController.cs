@@ -106,25 +106,24 @@ public class VectorialFieldController : MonoBehaviour
 
     public void Retarget(Transform _newTarget)
     {
-
+        float newScale = m_GridSize / _newTarget.lossyScale.magnitude;
         m_ArrowsParent.SetActive(true);
         m_ArrowsParent.transform.parent = _newTarget;
         m_ArrowsParent.transform.localPosition = m_GridPosition;
-        m_ArrowsParent.transform.localScale = new Vector3(m_GridSize, m_GridSize, m_GridSize);
+        m_ArrowsParent.transform.localScale = new Vector3(newScale, newScale, newScale);
         InitVectors();
         m_ArrowsParent.SetActive(displayField);
 
         m_RotArrowsParent.SetActive(true);
         m_RotArrowsParent.transform.parent = _newTarget;
         m_RotArrowsParent.transform.localPosition = m_GridPosition;
-        m_RotArrowsParent.transform.localScale = new Vector3(m_GridSize, m_GridSize, m_GridSize);
+        m_RotArrowsParent.transform.localScale = new Vector3(newScale, newScale, newScale);
         InitRotVectors();
         m_RotArrowsParent.SetActive(displayRotational);
 
         m_LinesParent.SetActive(true);
         InitLineRenderers();
-        if (!displayLines)
-            m_LinesParent.SetActive(false);
+        m_LinesParent.SetActive(displayLines);
     }
     private void Awake()
     {
@@ -161,6 +160,10 @@ public class VectorialFieldController : MonoBehaviour
             Destroy(arrow);
         m_Arrows.Clear();
         Destroy(m_ArrowsParent);
+        foreach (GameObject rotArrow in m_RotArrows)
+            Destroy(rotArrow);
+        m_RotArrows.Clear();
+        Destroy(m_RotArrowsParent);
         foreach (LineRenderer line in m_Lines)
             Destroy(line);
         m_Lines.Clear();
@@ -200,7 +203,7 @@ public class VectorialFieldController : MonoBehaviour
         if (m_RotArrowsParent != null)
         {
             m_RotArrowsParent.SetActive(true);
-            InitVectors();
+            InitRotVectors();
             m_RotArrowsParent.SetActive(displayRotational);
         }
     }
@@ -237,12 +240,8 @@ public class VectorialFieldController : MonoBehaviour
         {
             if (m_Density > 20)
                 m_Density = 20;
-            m_MaxSizeVector = 1f / m_Density;
         }
-        else
-        {
-            m_MaxSizeVector = 1f / m_Density;
-        }
+        m_MaxSizeVector = 1f / m_Density;
         int index = 0;
         float gridStep = m_GridSize / (m_Density - 1);
         float gridHalfSize = m_GridSize * 0.5f;
@@ -291,15 +290,10 @@ public class VectorialFieldController : MonoBehaviour
     public void InitRotVectors()
     {
         if (m_3D)
-        {
             if (m_Density > 20)
                 m_Density = 20;
-            m_MaxSizeVector = 1f / m_Density;
-        }
-        else
-        {
-            m_MaxSizeVector = 1f / m_Density;
-        }
+        m_MaxSizeVector = 1f / m_Density;
+
         int index = 0;
         float gridStep = m_GridSize / (m_Density - 1);
         float gridHalfSize = m_GridSize * 0.5f;
@@ -342,7 +336,7 @@ public class VectorialFieldController : MonoBehaviour
                 }
         for (int i = index; i < m_RotArrows.Count; i++)
             m_RotArrows[i].SetActive(false);
-        if (!displayField)
+        if (!displayRotational)
             HideRotArrows();
     }
 
@@ -455,9 +449,6 @@ public class VectorialFieldController : MonoBehaviour
 
             line.SetPosition(i + 1, currentPoint);
 
-
-            //Color newColor = new Color(1f, ((float)(i)) / maxSuccesiveLines, 0f, 1f);
-            //Debug.DrawLine(previousPoint, currentPoint, newColor);
             previousPoint = currentPoint;
         }
     }
@@ -468,7 +459,6 @@ public class VectorialFieldController : MonoBehaviour
         float distConverter = (m_Globals.adu2m * m_Globals.unity2astronomy);
         foreach (AstralObject influence in m_Globals.astralActors)
         {
-            //float minDistance = 100 * (m_Globals.adu2m * m_Globals.unity2astronomy);
             if (m_bIgnoreSun && influence == m_Globals.sun)
                 continue;
             Vector3 toStar = influence.ConvertedPosition - _positionUnity * distConverter;

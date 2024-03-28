@@ -14036,10 +14036,10 @@ MonoBehaviour:
   m_Density: 100
   m_3D: 1
   m_LogScale: 1
-  m_Zoom: 10
+  m_Zoom: 100
   displayField: 1
   m_ArrowPrefab: {fileID: 656066910410522721, guid: a5622fe2b14cee04085ad482a4a15b2e, type: 3}
-  displayRotational: 1
+  displayRotational: 0
   m_RotArrowPrefab: {fileID: 656066910410522721, guid: e8840a2a31bc13448b6bdcac2bea8594, type: 3}
   m_LineModel: {fileID: 4952193525126788113, guid: b48124547e51d1640a13f1847843792d, type: 3}
   displayLines: 1
