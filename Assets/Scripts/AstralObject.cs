@@ -6,7 +6,9 @@ public class AstralObject : MonoBehaviour
     private SphereCollider m_SphereCollider;
 
     [SerializeField] private Globals globals;
-    [SerializeField] private VectorialField m_VectorialField;
+    [SerializeField] private VectorialFieldController m_VectorialField;
+
+    AsteroidFieldGenerator m_AsteroidFieldGenerator;
 
     [Tooltip("in astronomical mass unit")] public float mass = 1f;
 
@@ -33,6 +35,7 @@ public class AstralObject : MonoBehaviour
 
     private Vector3 m_originalSize;
 
+    public bool isAsteroid = false;
     public void ConvertUnits()
     {
         ConvertedMass = mass * globals.amu2kg;
@@ -46,7 +49,9 @@ public class AstralObject : MonoBehaviour
         if (!globals)
             globals = FindObjectOfType<Globals>();
         if (!m_VectorialField)
-            m_VectorialField = FindObjectOfType<VectorialField>();
+            m_VectorialField = FindObjectOfType<VectorialFieldController>();
+        if (!m_AsteroidFieldGenerator)
+            m_AsteroidFieldGenerator = FindObjectOfType<AsteroidFieldGenerator>();
 
         globals.astralActors.Add(this);
         ConvertUnits();
@@ -58,14 +63,18 @@ public class AstralObject : MonoBehaviour
             m_SphereCollider.enabled = true;
             m_SphereCollider.radius = 1f;
         }
-        gameObject.AddComponent<Rigidbody>();
-
+        Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
+        rigidbody.isKinematic = true;
         m_SphereCollider.isTrigger = true;
     }
 
     private void OnDestroy()
     {
         globals.astralActors.Remove(this);
+        if(isAsteroid) 
+        {
+            m_AsteroidFieldGenerator.Asteroids.Remove(this.gameObject);
+        }
     }
 
     private void Start()
@@ -80,7 +89,8 @@ public class AstralObject : MonoBehaviour
                 ) / globals.asu2ms;
         }
         ConvertedVelocity = velocity * globals.asu2ms;
-        Resize();
+        if (!isAsteroid)
+            Resize();
     }
 
     private void OnValidate()
@@ -105,7 +115,6 @@ public class AstralObject : MonoBehaviour
             m_SizeFactor = Mathf.Clamp(m_SizeFactor, 0.1f / m_originalSize.magnitude, 10f / m_originalSize.magnitude);
         }
         transform.localScale = m_originalSize * m_SizeFactor;
-        //m_SphereCollider.radius = 1f / m_SizeFactor;
     }
 
     private void ProcessPosition()
@@ -124,6 +133,7 @@ public class AstralObject : MonoBehaviour
     private void FixedUpdate()
     {
         ProcessPosition();
+
     }
 
     //Reposition the planet
@@ -158,12 +168,22 @@ public class AstralObject : MonoBehaviour
     {
         globals.mainCamera.GetComponent<CameraBehaviour>().PlanetClicked(transform);
         globals.selectedActor = this;
-        m_VectorialField.transform.parent = this.transform;
-        m_VectorialField.transform.localPosition = Vector3.zero;
+        m_VectorialField.Retarget(transform);
     }
-
+    private void OnMouseEnter()
+    {
+        //Glow Growth
+        transform.GetChild(0).transform.localScale *= 2f; // Glow is 0
+    }
+    private void OnMouseExit()
+    {
+        //Glow Shrink
+        transform.GetChild(0).transform.localScale *= 0.5f; // Glow is 0
+    }
     private void OnTriggerEnter(Collider other)
     {
+        if (!isAsteroid && (other.ClosestPoint(transform.position).sqrMagnitude / m_SizeFactor / m_SizeFactor) > 1f) // check if the collision happens because of rendering effects
+        { return; }
         print("Collision");
         if (other.gameObject.TryGetComponent(out AstralObject otherAstral))
         {
@@ -175,6 +195,7 @@ public class AstralObject : MonoBehaviour
                 otherAstral.m_originalSize *= ratio;
                 if (gameObject == globals.selectedActor)
                     globals.selectedActor = this;
+                gameObject.SetActive(false);
                 Destroy(gameObject);
             }
             //else we let the smaller object handles the collision and thus its destruction

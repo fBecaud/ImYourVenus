@@ -114,7 +114,7 @@ public class NewPlanetPlacer : MonoBehaviour
         NewPlanetId = Random.Range(0, NewPlanetsPrefabs_ToUse.Count);
 
         NewPlanetToPlace = Instantiate(NewPlanetsPrefabs_ToUse[NewPlanetId]);
-
+        NewPlanetToPlace.name = names[Random.Range(0,names.Length-1)];
         Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
         NewPlanetToPlace.transform.position =
             new Vector3(MouseWorldPos.x, 0f, MouseWorldPos.z);
@@ -160,6 +160,7 @@ public class NewPlanetPlacer : MonoBehaviour
 
                 NewPlanetsPrefabs_ToUse.Remove(NewPlanetsPrefabs_ToUse[NewPlanetId]);
                 NewPlanetId = -1;
+                AstralScript.GetComponent<SphereCollider>().radius = 0.5f;
 
                 SwitchModes(PlacementMode);
             }
@@ -189,4 +190,48 @@ public class NewPlanetPlacer : MonoBehaviour
         PlaceButton.gameObject.SetActive(Mode);
         CancelButton.gameObject.SetActive(!Mode);
     }
+
+    string[] names =
+    {
+        "Dedrephus",
+        "Bumiter",
+        "Vogrion",
+        "Tostrore",
+        "Niuphus",
+        "Puiter",
+        "Gnoiwei",
+        "Strigoclite",
+        "Stryke O73",
+        "Ceron G13",
+        "Reconides",
+        "Pebounides",
+        "Xenkarth",
+        "Pagade",
+        "Uclite",
+        "Doagantu",
+        "Bremonides",
+        "Phoponus",
+        "Llarvis 84O7",
+        "Liuq 3Z5",
+        "Vunvunides",
+        "Vingethea",
+        "Pastrapus",
+        "Otruna",
+        "Augantu",
+        "Xowei",
+        "Gralolia",
+        "Stragotania",
+        "Phorix 8",
+        "Lagua 2",
+        "Kilnuehiri",
+        "Onvephus",
+        "Tholmiuq",
+        "Mebburn",
+        "Iatera",
+        "Uaturn",
+        "Llisuzuno",
+        "Nipogawa",
+        "Dichi 14Q",
+        "Losie RWX"
+    };
 }
