@@ -21,18 +21,17 @@ public class AsteroidFieldGenerator : MonoBehaviour
             AsteroidsParent = new();
         }
     }
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
         for (int i = 0; i < m_AsteroidNb; i++)
             InitOneAsteroid();
     }
 
-    void InitOneAsteroid()
-
+    private void InitOneAsteroid()
     {
         int index = Random.Range(0, m_AsteroidPrefabs.Count - 1);
-        GameObject newAsteroid = Instantiate(m_AsteroidPrefabs[index], new Vector3(1000f,1000f,1000f), Random.rotation, AsteroidsParent.transform);
+        GameObject newAsteroid = Instantiate(m_AsteroidPrefabs[index], new Vector3(1000f, 1000f, 1000f), Random.rotation, AsteroidsParent.transform);
         newAsteroid.SetActive(false);
 
         AstralObject astralInfos = newAsteroid.GetComponent<AstralObject>();
@@ -55,20 +54,15 @@ public class AsteroidFieldGenerator : MonoBehaviour
         astralInfos.isAsteroid = true;
 
         x = Random.Range(-200f, 200f);
-            y = Random.Range(-20f, 20f);
-            z = Random.Range(-200f, 200f);
+        y = Random.Range(-20f, 20f);
+        z = Random.Range(-200f, 200f);
 
-            float size = Random.Range(0.001f, 10f);
+        float size = Random.Range(0.001f, 10f);
 
-            newAsteroid.transform.position = new Vector3(x, y, z);
-            newAsteroid.transform.localScale = new Vector3(size, size, size);
-            astralInfos.mass = size;
+        newAsteroid.transform.position = new Vector3(x, y, z);
+        newAsteroid.transform.localScale = new Vector3(size, size, size);
+        astralInfos.mass = size;
         newAsteroid.SetActive(true);
         _ = Instantiate(m_TrailPrefab, newAsteroid.transform);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

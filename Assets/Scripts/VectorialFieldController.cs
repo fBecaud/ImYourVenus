@@ -36,6 +36,16 @@ public class VectorialFieldController : MonoBehaviour
 
     [SerializeField] private Vector3 m_GridPosition = Vector3.zero;
 
+    public Vector3 GridPosition
+    {
+        get { return m_GridPosition; }
+        set
+        {
+            m_GridPosition = value;
+            Retarget(m_Globals.selectedActor.transform);
+        }
+    }
+
     [Header("Field of Vector Settings")]
     [SerializeField, Range(2f, 100f)] private uint m_Density = 20;
 
