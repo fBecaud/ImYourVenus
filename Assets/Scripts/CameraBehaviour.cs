@@ -156,11 +156,8 @@ public class CameraBehaviour : MonoBehaviour
 
     public void UnlockCam()
     {
-        if (!PlanetInfoScript.IsObitingActive)
-        {
-            FreeCam._enableRotation = true;
-            LockedText.enabled = false;
-        }
+        FreeCam._enableRotation = true;
+        LockedText.enabled = false;
     }
 
     public bool UnlockPlanet_IsRunning { get; private set; }
