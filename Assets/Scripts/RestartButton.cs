@@ -1,23 +1,15 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Button))]
 public class RestartButton : MonoBehaviour
 {
-    [SerializeField] private Button Button = null;
+    private Button Button = null;
 
     private void Start()
     {
-        if (Button == null)
-        {
-            Debug.LogError("One or multiple field(s) unset in SwitchMap");
-#if UNITY_EDITOR
-            EditorApplication.ExitPlaymode();
-#endif
-            Application.Quit();
-        }
-
+        Button = GetComponent<Button>();
         Button.onClick.AddListener(ButtonClicked);
     }
 
