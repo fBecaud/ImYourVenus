@@ -64,7 +64,10 @@ public class AstralObject : MonoBehaviour
             m_Collider = m_SphereCollider;
         }
         m_Collider.enabled = true;
-        Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
+        Rigidbody rigidbody;
+        if (!gameObject.TryGetComponent<Rigidbody>(out rigidbody))
+            rigidbody = gameObject.AddComponent<Rigidbody>();
+
         rigidbody.isKinematic = true;
         rigidbody.useGravity = false;
 
