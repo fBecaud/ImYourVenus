@@ -31,7 +31,7 @@ public class AstralObject : MonoBehaviour
     private float m_SizeFactor = 1f;
 
     public float SizeFactor
-    { get { return m_SizeFactor; } private set { } }
+    { get { return m_SizeFactor; } private set { m_SizeFactor = value; } }
 
     private Vector3 m_originalSize;
 
