@@ -42,7 +42,6 @@ public class AstralObject : MonoBehaviour
         ConvertedPosition = transform.position * (globals.adu2m * globals.unity2astronomy);
         ConvertedVelocity = velocity * (globals.asu2ms);
     }
-
     private void Awake()
     {
         bool hasCollider = TryGetComponent(out m_Collider);

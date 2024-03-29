@@ -64,7 +64,7 @@ public class VectorialFieldController : MonoBehaviour
         }
     }
 
-    [SerializeField] private bool m_LogScale;
+    [SerializeField] private bool m_LogScale = false;
 
     public bool LogScale
     {
@@ -420,7 +420,6 @@ public class VectorialFieldController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        m_LogScale = !m_bIgnoreSun;
         InitVectors();
         InitRotVectors();
     }
