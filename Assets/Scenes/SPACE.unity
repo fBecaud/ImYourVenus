@@ -15853,7 +15853,7 @@ MonoBehaviour:
   SliderDensity: {fileID: 1328155632}
   ThreeDeeToggle: {fileID: 1590047888}
   IgnoreSunToggle: {fileID: 290935862}
-  LogScaleToggle: {fileID: 0}
+  LogScaleToggle: {fileID: 1558563539}
 --- !u!1001 &1810151826
 PrefabInstance:
   m_ObjectHideFlags: 0
