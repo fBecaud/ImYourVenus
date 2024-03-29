@@ -28,6 +28,7 @@ public class PlanetInfo : MonoBehaviour
 
     [SerializeField] private Toggle ThreeDeeToggle = null;
     [SerializeField] private Toggle IgnoreSunToggle = null;
+    [SerializeField] private Toggle LogScaleToggle = null;
 
     public bool IsObitingActive
     { get { return OrbitToggle.isOn && IsFollowingPlanet; } }
@@ -46,7 +47,8 @@ public class PlanetInfo : MonoBehaviour
         if (InfoDisplay == null || DisplayDisplay == null || PlanetNameDisplay == null
             || OrbitToggle == null || VFieldToggle == null || LinesToggle == null || RotateToggle == null
             || VelocityDisplay == null || MassDisplay == null || PositionDisplay == null
-            || SliderDensity == null || SliderSize == null || ThreeDeeToggle == null || IgnoreSunToggle == null)
+            || SliderDensity == null || SliderSize == null
+            || ThreeDeeToggle == null || IgnoreSunToggle == null || LogScaleToggle == null)
         {
             Debug.LogError("One or multiple field(s) unset in NewPlanetPlacer");
 #if UNITY_EDITOR
@@ -80,9 +82,11 @@ public class PlanetInfo : MonoBehaviour
 
         ThreeDeeToggle.onValueChanged.AddListener(ThreeDeeChanged);
         IgnoreSunToggle.onValueChanged.AddListener(IgnoreSunChanged);
+        LogScaleToggle.onValueChanged.AddListener(LogScaleChanged);
 
         VFController.ThreeDee = true;
         VFController.IgnoreSun = false;
+        VFController.LogScale = false;
     }
 
     private void OrbitMode(bool _newValue)
@@ -128,6 +132,11 @@ public class PlanetInfo : MonoBehaviour
     private void IgnoreSunChanged(bool _newValue)
     {
         VFController.IgnoreSun = _newValue;
+    }
+
+    private void LogScaleChanged(bool _newValue)
+    {
+        VFController.LogScale = _newValue;
     }
 
     private void LateUpdate()
@@ -213,5 +222,6 @@ public class PlanetInfo : MonoBehaviour
         SliderDensity.gameObject.SetActive(!enable);
         ThreeDeeToggle.gameObject.SetActive(!enable);
         IgnoreSunToggle.gameObject.SetActive(!enable);
+        LogScaleToggle.gameObject.SetActive(!enable);
     }
 }

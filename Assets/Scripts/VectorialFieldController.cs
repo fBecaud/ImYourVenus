@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
@@ -35,8 +34,7 @@ public class VectorialFieldController : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    private Vector3 m_GridPosition = Vector3.zero;
+    [SerializeField] private Vector3 m_GridPosition = Vector3.zero;
 
     [Header("Field of Vector Settings")]
     [SerializeField, Range(2f, 100f)] private uint m_Density = 20;
@@ -67,6 +65,16 @@ public class VectorialFieldController : MonoBehaviour
     }
 
     [SerializeField] private bool m_LogScale;
+
+    public bool LogScale
+    {
+        get { return m_LogScale; }
+        set
+        {
+            m_LogScale = value;
+        }
+    }
+
     [SerializeField] private float m_Zoom = 10000f;
     private float m_MaxSizeVector = 1f;
 
@@ -124,7 +132,6 @@ public class VectorialFieldController : MonoBehaviour
     private List<LineRenderer> m_Lines = new List<LineRenderer>();
     private GameObject m_LinesParent;
 
-    [SerializeField]
     public bool bDisplayLines
     {
         get { return displayLines; }
@@ -433,7 +440,7 @@ public class VectorialFieldController : MonoBehaviour
                     if (m_LogScale)
                         size = Mathf.Clamp(Mathf.Log10(1f + aMag * parentRescale), 0f, m_MaxSizeVector);
                     else
-                        size = Mathf.Clamp(aMag * parentRescale*1000f, 0f, m_MaxSizeVector);
+                        size = Mathf.Clamp(aMag * parentRescale * 1000f, 0f, m_MaxSizeVector);
                     if (size != 0f)
                     {
                         m_Arrows[i].transform.LookAt(m_Arrows[i].transform.position + acceleration / aMag);
@@ -450,7 +457,7 @@ public class VectorialFieldController : MonoBehaviour
                     if (m_LogScale)
                         size = Mathf.Clamp(Mathf.Log10(1f + rMag * parentRescale), 0f, m_MaxSizeVector);
                     else
-                        size = Mathf.Clamp(rMag * parentRescale*1000f, 0f, m_MaxSizeVector);
+                        size = Mathf.Clamp(rMag * parentRescale * 1000f, 0f, m_MaxSizeVector);
                     if (size != 0f)
                     {
                         m_RotArrows[i].transform.LookAt(m_RotArrows[i].transform.position + rotational / rMag);
@@ -480,7 +487,7 @@ public class VectorialFieldController : MonoBehaviour
                     {
                         float angleV = j * angleVStep + angleVOffset;
 
-                        Vector3 startPoint = new (m_Globals.selectedActor.transform.position.x + (Mathf.Cos(angleH) * transform.localScale.x * Mathf.Sin(angleV)) * convertedStep, m_Globals.selectedActor.transform.position.y + Mathf.Cos(angleV) * transform.localScale.y * convertedStep, m_Globals.selectedActor.transform.position.z + (Mathf.Sin(angleH) * transform.localScale.z * Mathf.Sin(angleV)) * convertedStep);
+                        Vector3 startPoint = new(m_Globals.selectedActor.transform.position.x + (Mathf.Cos(angleH) * transform.localScale.x * Mathf.Sin(angleV)) * convertedStep, m_Globals.selectedActor.transform.position.y + Mathf.Cos(angleV) * transform.localScale.y * convertedStep, m_Globals.selectedActor.transform.position.z + (Mathf.Sin(angleH) * transform.localScale.z * Mathf.Sin(angleV)) * convertedStep);
                         DrawAFieldLine(startPoint, i * LineNbVertical + j);
                     }
                 }
@@ -491,7 +498,7 @@ public class VectorialFieldController : MonoBehaviour
                 for (int i = 0; i < m_Lines.Count(); i++)
                 {
                     float angle = i * angleStep;
-                    Vector3 startPoint = new (m_Globals.selectedActor.transform.position.x + Mathf.Cos(angle) * transform.localScale.x * convertedStep, m_Globals.selectedActor.transform.position.y, m_Globals.selectedActor.transform.position.z + Mathf.Sin(angle) * transform.localScale.z * convertedStep);
+                    Vector3 startPoint = new(m_Globals.selectedActor.transform.position.x + Mathf.Cos(angle) * transform.localScale.x * convertedStep, m_Globals.selectedActor.transform.position.y, m_Globals.selectedActor.transform.position.z + Mathf.Sin(angle) * transform.localScale.z * convertedStep);
                     DrawAFieldLine(startPoint, i);
                 }
             }
