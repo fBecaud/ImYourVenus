@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEditor;
@@ -29,6 +30,25 @@ public class PlanetInfo : MonoBehaviour
     [SerializeField] private Toggle IgnoreSunToggle = null;
     [SerializeField] private Toggle LogScaleToggle = null;
 
+    [SerializeField] private TMP_InputField GridPosX = null;
+    [SerializeField] private TMP_InputField GridPosY = null;
+    [SerializeField] private TMP_InputField GridPosZ = null;
+
+    private Vector3 NewGridPos
+    {
+        get
+        {
+            string inputX = GridPosX.text.ToString();
+            string inputY = GridPosY.text.ToString();
+            string inputZ = GridPosZ.text.ToString();
+            return new(
+                (float)(inputX.Length > 0 ? System.Convert.ToDouble(inputX) : 0f),
+                (float)(inputY.Length > 0 ? System.Convert.ToDouble(inputY) : 0f),
+                (float)(inputZ.Length > 0 ? System.Convert.ToDouble(inputZ) : 0f)
+                );
+        }
+    }
+
     public bool IsObitingActive
     { get { return OrbitToggle.isOn && IsFollowingPlanet; } }
 
@@ -47,7 +67,8 @@ public class PlanetInfo : MonoBehaviour
             || OrbitToggle == null || VFieldToggle == null || LinesToggle == null || RotateToggle == null
             || VelocityDisplay == null || MassDisplay == null || PositionDisplay == null
             || SliderDensity == null || SliderSize == null
-            || ThreeDeeToggle == null || IgnoreSunToggle == null || LogScaleToggle == null)
+            || ThreeDeeToggle == null || IgnoreSunToggle == null || LogScaleToggle == null
+            || GridPosX == null || GridPosY == null || GridPosZ == null)
         {
             Debug.LogError("One or multiple field(s) unset in NewPlanetPlacer");
 #if UNITY_EDITOR
@@ -86,6 +107,10 @@ public class PlanetInfo : MonoBehaviour
         VFController.ThreeDee = true;
         VFController.IgnoreSun = false;
         VFController.LogScale = false;
+
+        GridPosX.onEndEdit.AddListener(GridPosChanged);
+        GridPosY.onEndEdit.AddListener(GridPosChanged);
+        GridPosZ.onEndEdit.AddListener(GridPosChanged);
     }
 
     private void OrbitMode(bool _newValue)
@@ -136,6 +161,11 @@ public class PlanetInfo : MonoBehaviour
     private void LogScaleChanged(bool _newValue)
     {
         VFController.LogScale = _newValue;
+    }
+
+    private void GridPosChanged(string _)
+    {
+        VFController.GridPosition = NewGridPos;
     }
 
     private void LateUpdate()
@@ -222,5 +252,8 @@ public class PlanetInfo : MonoBehaviour
         ThreeDeeToggle.gameObject.SetActive(!enable);
         IgnoreSunToggle.gameObject.SetActive(!enable);
         LogScaleToggle.gameObject.SetActive(!enable);
+        GridPosX.gameObject.SetActive(!enable);
+        GridPosY.gameObject.SetActive(!enable);
+        GridPosZ.gameObject.SetActive(!enable);
     }
 }
