@@ -6,7 +6,9 @@ using static UnityEditor.FilePathAttribute;
 
 public class AsteroidFieldGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject m_AsteroidPrefab;
+    [SerializeField] private List<GameObject> m_AsteroidPrefabs;
+    [SerializeField] private GameObject m_TrailPrefab;
+
     [SerializeField] private Globals m_Globals;
     [SerializeField, Min(5)] private int m_AsteroidNb;
 
@@ -32,7 +34,8 @@ public class AsteroidFieldGenerator : MonoBehaviour
     void InitOneAsteroid()
 
     {
-        GameObject newAsteroid = Instantiate(m_AsteroidPrefab, new Vector3(1000f,1000f,1000f), Random.rotation, AsteroidsParent.transform);
+        int index = Random.Range(0, m_AsteroidPrefabs.Count - 1);
+        GameObject newAsteroid = Instantiate(m_AsteroidPrefabs[index], new Vector3(1000f,1000f,1000f), Random.rotation, AsteroidsParent.transform);
         newAsteroid.SetActive(false);
 
         AstralObject astralInfos = newAsteroid.GetComponent<AstralObject>();
@@ -64,7 +67,7 @@ public class AsteroidFieldGenerator : MonoBehaviour
             newAsteroid.transform.localScale = new Vector3(size, size, size);
             astralInfos.mass = size;
         newAsteroid.SetActive(true);
-
+        _ = Instantiate(m_TrailPrefab, newAsteroid.transform);
     }
     // Update is called once per frame
     void Update()
