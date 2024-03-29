@@ -15,6 +15,8 @@ public class NewPlanetPlacer : MonoBehaviour
     [SerializeField] private TMP_InputField NewSpeedInputX = null;
     [SerializeField] private TMP_InputField NewSpeedInputZ = null;
 
+    public bool isAsteroidPlacer = false;
+
     private float NewMass
     {
         get
@@ -92,7 +94,7 @@ public class NewPlanetPlacer : MonoBehaviour
 
     private void FillPrefabToUse()
     {
-        NewPlanetsPrefabs_ToUse = NewPlanetsPrefabs;
+        NewPlanetsPrefabs_ToUse = new(NewPlanetsPrefabs);
     }
 
     private void OnPlaceTask()
@@ -108,18 +110,15 @@ public class NewPlanetPlacer : MonoBehaviour
         ErrorTxt.gameObject.SetActive(false);
         SwitchModes(CancelMode);
 
-        if (NewPlanetsPrefabs_ToUse.Count == 0)
-            FillPrefabToUse();
-
-        NewPlanetId = Random.Range(0, NewPlanetsPrefabs_ToUse.Count);
+        NewPlanetId = Random.Range(0, NewPlanetsPrefabs_ToUse.Count - 1);
 
         NewPlanetToPlace = Instantiate(NewPlanetsPrefabs_ToUse[NewPlanetId]);
-        NewPlanetToPlace.name = names[Random.Range(0,names.Length-1)];
+        NewPlanetToPlace.name = names[Random.Range(0, names.Length - 1)];
         Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
         NewPlanetToPlace.transform.position =
             new Vector3(MouseWorldPos.x, 0f, MouseWorldPos.z);
         NewPlanetToPlace.transform.localScale = NewPlanetScale * NewMass;
-
+        NewPlanetToPlace.SetActive(true);
         StartCoroutine(FollowMouse());
     }
 
@@ -152,7 +151,7 @@ public class NewPlanetPlacer : MonoBehaviour
                 AstralScript.mass = NewMass;
                 AstralScript.velocity = NewSpeed;
                 AstralScript.ConvertUnits();
-
+                AstralScript.isAsteroid = isAsteroidPlacer;
                 _ = Instantiate(TrailsPrefab, NewPlanetToPlace.transform);
 
                 NewPlanetToPlace = null;
@@ -160,7 +159,12 @@ public class NewPlanetPlacer : MonoBehaviour
 
                 NewPlanetsPrefabs_ToUse.Remove(NewPlanetsPrefabs_ToUse[NewPlanetId]);
                 NewPlanetId = -1;
-                AstralScript.GetComponent<SphereCollider>().radius = 0.5f;
+                if (NewPlanetsPrefabs_ToUse.Count == 0)
+                    FillPrefabToUse();
+
+                SphereCollider sc;
+                if (AstralScript.TryGetComponent(out sc))
+                    sc.radius = 0.5f;
 
                 SwitchModes(PlacementMode);
             }

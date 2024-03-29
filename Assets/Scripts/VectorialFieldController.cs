@@ -286,7 +286,8 @@ public class VectorialFieldController : MonoBehaviour
             line.positionCount = maxSuccesiveLines + 1;
         if (m_3D)
         {
-            LineNbHorizontal = LineNbVertical = LineNb;
+            LineNbVertical = (int)Mathf.Sqrt(LineNb);
+            LineNbHorizontal = LineNb / LineNbVertical;
             LineNb = LineNbHorizontal * LineNbVertical;
         }
         for (int i = m_Lines.Count(); i < LineNb; i++)
