@@ -114,8 +114,8 @@ public class NewPlanetPlacer : MonoBehaviour
         NewPlanetId = Random.Range(0, NewPlanetsPrefabs_ToUse.Count);
 
         NewPlanetToPlace = Instantiate(NewPlanetsPrefabs_ToUse[NewPlanetId]);
-        NewPlanetToPlace.name = names[Random.Range(0,names.Length-1)];
-        Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
+        NewPlanetToPlace.name = names[Random.Range(0, names.Length - 1)];
+        Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         NewPlanetToPlace.transform.position =
             new Vector3(MouseWorldPos.x, 0f, MouseWorldPos.z);
         NewPlanetToPlace.transform.localScale = NewPlanetScale * NewMass;
@@ -191,7 +191,7 @@ public class NewPlanetPlacer : MonoBehaviour
         CancelButton.gameObject.SetActive(!Mode);
     }
 
-    string[] names =
+    private readonly string[] names =
     {
         "Dedrephus",
         "Bumiter",
