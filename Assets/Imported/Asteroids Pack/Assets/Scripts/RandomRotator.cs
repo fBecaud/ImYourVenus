@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class RandomRotator : MonoBehaviour
 {
-    [SerializeField]
-    private float tumble;
+    [SerializeField] private float tumbleFactor;
 
-    void Start()
+    private void Start()
     {
-        GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumble;
+        GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumbleFactor;
     }
 }
