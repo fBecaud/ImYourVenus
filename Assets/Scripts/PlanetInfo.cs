@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Xml.Schema;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -16,6 +18,9 @@ public class PlanetInfo : MonoBehaviour
     [SerializeField] private TMP_Text PositionDisplay = null;
 
     [SerializeField] private Toggle OrbitToggle = null;
+    [SerializeField] private Toggle VFieldToggle = null;
+    [SerializeField] private Toggle LinesToggle = null;
+    [SerializeField] private Toggle RotateToggle = null;
 
     public bool IsObitingActive
     { get { return OrbitToggle.isOn && IsFollowingPlanet; } }
@@ -27,10 +32,12 @@ public class PlanetInfo : MonoBehaviour
     { get; private set; }
 
     private CameraBehaviour CameraScript = null;
+    private VectorialFieldController VFController = null;
 
     private void Start()
     {
-        if (InfoDisplay == null || DisplayDisplay == null || OrbitToggle == null || PlanetNameDisplay == null
+        if (InfoDisplay == null || DisplayDisplay == null || PlanetNameDisplay == null
+            || OrbitToggle == null || VFieldToggle == null || LinesToggle == null || RotateToggle == null
             || VelocityDisplay == null || MassDisplay == null || PositionDisplay == null)
         {
             Debug.LogError("One or multiple field(s) unset in NewPlanetPlacer");
@@ -41,10 +48,18 @@ public class PlanetInfo : MonoBehaviour
         }
 
         CameraScript = FindAnyObjectByType<CameraBehaviour>();
+        VFController = FindAnyObjectByType<VectorialFieldController>();
 
         SwitchModes();
 
         OrbitToggle.onValueChanged.AddListener(OrbitMode);
+        VFieldToggle.onValueChanged.AddListener(VFieldMode);
+        LinesToggle.onValueChanged.AddListener(LinesMode);
+        RotateToggle.onValueChanged.AddListener(RotateMode);
+
+        VFController.bDisplayField = false;
+        VFController.bDisplayLines = false;
+        VFController.bDisplayRotational = false;
     }
 
     private void OrbitMode(bool _newValue)
@@ -53,6 +68,21 @@ public class PlanetInfo : MonoBehaviour
             StartCoroutine(CameraScript.LockCam());
         else if (!_newValue)
             CameraScript.UnlockCam();
+    }
+
+    private void VFieldMode(bool _newValue)
+    {
+        VFController.bDisplayField = _newValue;
+    }
+
+    private void LinesMode(bool _newValue)
+    {
+        VFController.bDisplayLines = _newValue;
+    }
+
+    private void RotateMode(bool _newValue)
+    {
+        VFController.bDisplayRotational = _newValue;
     }
 
     private void LateUpdate()
@@ -107,8 +137,13 @@ public class PlanetInfo : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
+
         Planet = null;
         SwitchModes();
+
+        VFController.bDisplayField = false;
+        VFController.bDisplayLines = false;
+        VFController.bDisplayRotational = false;
     }
 
     private void SwitchModes()
@@ -122,5 +157,8 @@ public class PlanetInfo : MonoBehaviour
         MassDisplay.gameObject.SetActive(!enable);
         PositionDisplay.gameObject.SetActive(!enable);
         OrbitToggle.gameObject.SetActive(!enable);
+        VFieldToggle.gameObject.SetActive(!enable);
+        LinesToggle.gameObject.SetActive(!enable);
+        RotateToggle.gameObject.SetActive(!enable);
     }
 }

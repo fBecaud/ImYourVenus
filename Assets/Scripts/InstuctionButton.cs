@@ -2,17 +2,17 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InstuctionButton : MonoBehaviour
+public class InstructionButton : MonoBehaviour
 {
     [Header("Instruction")]
-    [SerializeField] private Button InstructionButton = null;
+    [SerializeField] private Button InstructButton = null;
 
-    [SerializeField] private GameObject InstructionPanel = null;
+    [SerializeField] private GameObject InstructPanel = null;
 
     // Start is called before the first frame update
     private void Start()
     {
-        if (InstructionButton == null || InstructionPanel == null)
+        if (InstructButton == null || InstructPanel == null)
         {
             Debug.LogError("One or multiple field unset in InstuctionButton");
 #if UNITY_EDITOR
@@ -21,14 +21,14 @@ public class InstuctionButton : MonoBehaviour
             Application.Quit();
         }
 
-        InstructionPanel.SetActive(false);
-        InstructionButton.onClick.AddListener(delegate { InstructionPressed(); });
+        InstructPanel.SetActive(false);
+        InstructButton.onClick.AddListener(delegate { InstructionPressed(); });
     }
 
     private void InstructionPressed()
     {
-        Vector3 currentScale = InstructionButton.transform.localScale;
-        InstructionButton.transform.localScale = new(currentScale.x, -currentScale.y, currentScale.z);
-        InstructionPanel.SetActive(!InstructionPanel.activeInHierarchy);
+        Vector3 currentScale = InstructButton.transform.localScale;
+        InstructButton.transform.localScale = new(currentScale.x, -currentScale.y, currentScale.z);
+        InstructPanel.SetActive(!InstructPanel.activeInHierarchy);
     }
 }
