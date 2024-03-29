@@ -65,6 +65,16 @@ public class VectorialFieldController : MonoBehaviour
     }
 
     [SerializeField] private bool m_LogScale;
+
+    public bool LogScale
+    {
+        get { return m_LogScale; }
+        set
+        {
+            m_LogScale = value;
+        }
+    }
+
     [SerializeField] private float m_Zoom = 10000f;
     private float m_MaxSizeVector = 1f;
 
