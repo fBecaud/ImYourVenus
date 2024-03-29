@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AstralObject : MonoBehaviour
 {
-    private SphereCollider m_SphereCollider;
+    private Collider m_Collider;
 
     [SerializeField] private Globals globals;
     [SerializeField] private VectorialFieldController m_VectorialField;
@@ -45,7 +45,7 @@ public class AstralObject : MonoBehaviour
 
     private void Awake()
     {
-        bool hasCollider = TryGetComponent(out m_SphereCollider);
+        bool hasCollider = TryGetComponent(out m_Collider);
         if (!globals)
             globals = FindObjectOfType<Globals>();
         if (!m_VectorialField)
@@ -58,20 +58,23 @@ public class AstralObject : MonoBehaviour
         m_originalSize = transform.localScale;
         if (!hasCollider)
         {
-            m_SphereCollider = gameObject.AddComponent<SphereCollider>();
+            SphereCollider m_SphereCollider = gameObject.AddComponent<SphereCollider>();
             m_SphereCollider.center = Vector3.zero;
-            m_SphereCollider.enabled = true;
             m_SphereCollider.radius = 1f;
+            m_Collider = m_SphereCollider;
         }
+        m_Collider.enabled = true;
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.isKinematic = true;
-        m_SphereCollider.isTrigger = true;
+        rigidbody.useGravity = false;
+
+        m_Collider.isTrigger = true;
     }
 
     private void OnDestroy()
     {
         globals.astralActors.Remove(this);
-        if(isAsteroid) 
+        if (isAsteroid)
         {
             m_AsteroidFieldGenerator.Asteroids.Remove(this.gameObject);
         }
@@ -170,6 +173,7 @@ public class AstralObject : MonoBehaviour
         globals.selectedActor = this;
         m_VectorialField.Retarget(transform);
     }
+
     private void OnMouseEnter()
     {
         //Glow Growth

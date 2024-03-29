@@ -3402,7 +3402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AsteroidPrefab: {fileID: 1161810731}
   m_Globals: {fileID: 396314247}
-  m_AsteroidNb: 100
+  m_AsteroidNb: 10
   Asteroids: []
   AsteroidsParent: {fileID: 1050040007}
 --- !u!4 &978255758

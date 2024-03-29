@@ -125,6 +125,12 @@ public class VectorialFieldController : MonoBehaviour
         InitLineRenderers();
         m_LinesParent.SetActive(displayLines);
     }
+    public void UnTarget()
+    {
+        HideArrows();
+        HideRotArrows();
+        HideLines();
+    }
     private void Awake()
     {
         m_Globals = FindObjectOfType<Globals>();
@@ -210,10 +216,14 @@ public class VectorialFieldController : MonoBehaviour
     private void InitLineRenderers()
     {
         m_LineModel.positionCount = maxSuccesiveLines + 1;
+        LineNb = (int)m_Density;
         foreach (LineRenderer line in m_Lines)
             line.positionCount = maxSuccesiveLines + 1;
         if (m_3D)
+        {
+            LineNbHorizontal = LineNbVertical = LineNb;
             LineNb = LineNbHorizontal * LineNbVertical;
+        }
         for (int i = m_Lines.Count(); i < LineNb; i++)
             InitLineRenderer();
         for (int i = 0; i < m_Lines.Count(); i++)
@@ -238,8 +248,8 @@ public class VectorialFieldController : MonoBehaviour
     {
         if (m_3D)
         {
-            if (m_Density > 20)
-                m_Density = 20;
+            if (m_Density > 10)
+                m_Density = 10;
         }
         m_MaxSizeVector = 1f / m_Density;
         int index = 0;
@@ -290,8 +300,8 @@ public class VectorialFieldController : MonoBehaviour
     public void InitRotVectors()
     {
         if (m_3D)
-            if (m_Density > 20)
-                m_Density = 20;
+            if (m_Density > 10)
+                m_Density = 10;
         m_MaxSizeVector = 1f / m_Density;
 
         int index = 0;
@@ -364,7 +374,7 @@ public class VectorialFieldController : MonoBehaviour
                     if (m_LogScale)
                         size = Mathf.Clamp(Mathf.Log10(1f + aMag * parentRescale), 0f, m_MaxSizeVector);
                     else
-                        size = Mathf.Clamp(aMag / 10000f, 0f, m_MaxSizeVector);
+                        size = Mathf.Clamp(aMag * parentRescale*1000f, 0f, m_MaxSizeVector);
                     if (size != 0f)
                     {
                         m_Arrows[i].transform.LookAt(m_Arrows[i].transform.position + acceleration / aMag);
@@ -381,7 +391,7 @@ public class VectorialFieldController : MonoBehaviour
                     if (m_LogScale)
                         size = Mathf.Clamp(Mathf.Log10(1f + rMag * parentRescale), 0f, m_MaxSizeVector);
                     else
-                        size = Mathf.Clamp(rMag / 10000f, 0f, m_MaxSizeVector);
+                        size = Mathf.Clamp(rMag * parentRescale*1000f, 0f, m_MaxSizeVector);
                     if (size != 0f)
                     {
                         m_RotArrows[i].transform.LookAt(m_RotArrows[i].transform.position + rotational / rMag);
@@ -412,7 +422,7 @@ public class VectorialFieldController : MonoBehaviour
                     {
                         float angleV = j * angleVStep + angleVOffset;
 
-                        Vector3 startPoint = new Vector3(m_Globals.selectedActor.transform.position.x + (Mathf.Cos(angleH) * transform.localScale.x * Mathf.Sin(angleV)) * convertedStep, m_Globals.selectedActor.transform.position.y + Mathf.Cos(angleV) * transform.localScale.y * convertedStep, m_Globals.selectedActor.transform.position.z + (Mathf.Sin(angleH) * transform.localScale.z * Mathf.Sin(angleV)) * convertedStep);
+                        Vector3 startPoint = new (m_Globals.selectedActor.transform.position.x + (Mathf.Cos(angleH) * transform.localScale.x * Mathf.Sin(angleV)) * convertedStep, m_Globals.selectedActor.transform.position.y + Mathf.Cos(angleV) * transform.localScale.y * convertedStep, m_Globals.selectedActor.transform.position.z + (Mathf.Sin(angleH) * transform.localScale.z * Mathf.Sin(angleV)) * convertedStep);
                         DrawAFieldLine(startPoint, i * LineNbVertical + j);
                     }
                 }
@@ -423,7 +433,7 @@ public class VectorialFieldController : MonoBehaviour
                 for (int i = 0; i < m_Lines.Count(); i++)
                 {
                     float angle = i * angleStep;
-                    Vector3 startPoint = new Vector3(m_Globals.selectedActor.transform.position.x + Mathf.Cos(angle) * transform.localScale.x * convertedStep, m_Globals.selectedActor.transform.position.y, m_Globals.selectedActor.transform.position.z + Mathf.Sin(angle) * transform.localScale.z * convertedStep);
+                    Vector3 startPoint = new (m_Globals.selectedActor.transform.position.x + Mathf.Cos(angle) * transform.localScale.x * convertedStep, m_Globals.selectedActor.transform.position.y, m_Globals.selectedActor.transform.position.z + Mathf.Sin(angle) * transform.localScale.z * convertedStep);
                     DrawAFieldLine(startPoint, i);
                 }
             }
@@ -432,12 +442,12 @@ public class VectorialFieldController : MonoBehaviour
 
     private void DrawAFieldLine(Vector3 _startPoint, int index)
     {
-        Vector3 previousPoint = m_Globals.selectedActor.transform.position;
+        Vector3 firstPoint = m_Globals.selectedActor.transform.position;
         Vector3 currentPoint = _startPoint;
 
         LineRenderer line = m_Lines[index];
 
-        line.SetPosition(0, previousPoint);
+        line.SetPosition(0, firstPoint);
         for (int i = 0; i < maxSuccesiveLines; i++)
         {
             Vector3 force = ComputeAcceleration(currentPoint);
@@ -445,11 +455,8 @@ public class VectorialFieldController : MonoBehaviour
             float sqrMag = (currentPoint - transform.position).sqrMagnitude;
             if (sqrMag > maxDistLines * maxDistLines)
                 return;
-            Color newColor2 = new Color(1f, ((float)(i + 1)) / maxSuccesiveLines, 0f, 1f);
 
             line.SetPosition(i + 1, currentPoint);
-
-            previousPoint = currentPoint;
         }
     }
     private Vector3 ComputeAcceleration(Vector3 _positionUnity)
@@ -474,6 +481,7 @@ public class VectorialFieldController : MonoBehaviour
     private Vector3 ComputeRotational(Vector3 _positionUnity, Vector3 _acceleration)
     {
         float step = 1;
+
         Vector3 x_Increased = _positionUnity + new Vector3(step, 0f, 0f);
         Vector3 y_Increased = _positionUnity + new Vector3(0f, step, 0f);
         Vector3 z_Increased = _positionUnity + new Vector3(0f, 0f, step);
