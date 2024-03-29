@@ -9,6 +9,9 @@ public class PlanetInfo : MonoBehaviour
     [SerializeField] private TMP_Text InfoDisplay = null;
 
     [SerializeField] private GameObject DisplayDisplay = null;
+    private string PlanetName = string.Empty;
+
+    [SerializeField] private TMP_Text PlanetNameDisplay = null;
 
     [SerializeField] private TMP_Text VelocityDisplay = null;
     [SerializeField] private TMP_Text MassDisplay = null;
@@ -29,7 +32,7 @@ public class PlanetInfo : MonoBehaviour
 
     private void Start()
     {
-        if (InfoDisplay == null || DisplayDisplay == null || OrbitToggle == null
+        if (InfoDisplay == null || DisplayDisplay == null || OrbitToggle == null || PlanetNameDisplay == null
             || VelocityDisplay == null || MassDisplay == null || PositionDisplay == null)
         {
             Debug.LogError("One or multiple field(s) unset in NewPlanetPlacer");
@@ -84,7 +87,7 @@ public class PlanetInfo : MonoBehaviour
         }
     }
 
-    public void FollowPlanet(AstralObject _planet)
+    private void FollowPlanet(AstralObject _planet)
     {
         Planet = _planet;
         SwitchModes();
@@ -93,7 +96,18 @@ public class PlanetInfo : MonoBehaviour
     public void FollowPlanet(GameObject _planet)
     {
         if (_planet.TryGetComponent(out AstralObject AstralObj))
+        {
             FollowPlanet(AstralObj);
+            PlanetName = _planet.name;
+            {
+                PlanetName.ToUpper();
+                PlanetNameDisplay.text = PlanetName;
+            }
+        }
+        else
+        {
+            Debug.LogError("Follow Planet not an AstralObject");
+        }
     }
 
     public IEnumerator StopFollowPlanet()
@@ -109,6 +123,7 @@ public class PlanetInfo : MonoBehaviour
         bool enable = Planet == null;
 
         InfoDisplay.enabled = enable;
+        PlanetNameDisplay.gameObject.SetActive(!enable);
         DisplayDisplay.SetActive(!enable);
         VelocityDisplay.gameObject.SetActive(!enable);
         MassDisplay.gameObject.SetActive(!enable);
