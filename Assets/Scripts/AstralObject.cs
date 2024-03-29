@@ -98,17 +98,6 @@ public class AstralObject : MonoBehaviour
         if (!isAsteroid)
             Resize();
     }
-
-    private void OnValidate()
-    {
-        //Security for 1st validation
-        if (!globals)
-            globals = FindObjectOfType<Globals>();
-
-        ConvertUnits();
-        print("Change a value");
-    }
-
     private void Resize()
     {
         if (m_CenterOfEllipse && m_CenterOfEllipse != globals.sun)
@@ -201,8 +190,9 @@ public class AstralObject : MonoBehaviour
                 otherAstral.ConvertedMass += ConvertedMass;
                 otherAstral.m_originalSize *= ratio;
                 if (gameObject == globals.selectedActor)
-                    globals.selectedActor = this;
+                    globals.selectedActor = otherAstral;
                 gameObject.SetActive(false);
+                m_VectorialField.Retarget(otherAstral.transform);
                 Destroy(gameObject);
             }
             //else we let the smaller object handles the collision and thus its destruction
