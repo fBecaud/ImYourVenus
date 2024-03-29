@@ -114,11 +114,13 @@ public class NewPlanetPlacer : MonoBehaviour
 
         NewPlanetToPlace = Instantiate(NewPlanetsPrefabs_ToUse[NewPlanetId]);
         NewPlanetToPlace.name = names[Random.Range(0, names.Length - 1)];
-        Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
+
+        Vector3 MouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         NewPlanetToPlace.transform.position =
             new Vector3(MouseWorldPos.x, 0f, MouseWorldPos.z);
         NewPlanetToPlace.transform.localScale = NewPlanetScale * NewMass;
         NewPlanetToPlace.SetActive(true);
+
         StartCoroutine(FollowMouse());
     }
 
@@ -152,6 +154,7 @@ public class NewPlanetPlacer : MonoBehaviour
                 AstralScript.velocity = NewSpeed;
                 AstralScript.ConvertUnits();
                 AstralScript.isAsteroid = isAsteroidPlacer;
+
                 _ = Instantiate(TrailsPrefab, NewPlanetToPlace.transform);
 
                 NewPlanetToPlace = null;
@@ -162,9 +165,9 @@ public class NewPlanetPlacer : MonoBehaviour
                 if (NewPlanetsPrefabs_ToUse.Count == 0)
                     FillPrefabToUse();
 
-                SphereCollider sc;
-                if (AstralScript.TryGetComponent(out sc))
-                    sc.radius = 0.5f;
+                SphereCollider SC;
+                if (AstralScript.TryGetComponent(out SC))
+                    SC.radius = 0.5f;
 
                 SwitchModes(PlacementMode);
             }
@@ -195,7 +198,7 @@ public class NewPlanetPlacer : MonoBehaviour
         CancelButton.gameObject.SetActive(!Mode);
     }
 
-    string[] names =
+    private readonly string[] names =
     {
         "Dedrephus",
         "Bumiter",
