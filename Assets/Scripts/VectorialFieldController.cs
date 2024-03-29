@@ -12,17 +12,64 @@ public class VectorialFieldController : MonoBehaviour
 
     [SerializeField] private bool m_bIgnoreSun = true;
 
+    public bool IgnoreSun
+    {
+        get { return m_bIgnoreSun; }
+        set
+        {
+            m_bIgnoreSun = value;
+        }
+    }
+
     [Header("Grid Settings")]
     [SerializeField, Range(10f, 6000f)] private float m_GridSize = 100f;
-    [SerializeField] private Vector3 m_GridPosition = Vector3.zero;
 
+    public float SizeGrid
+    {
+        get { return m_GridSize; }
+        set
+        {
+            m_GridSize = value;
+            InitVectors();
+            InitRotVectors();
+        }
+    }
+
+    [SerializeField]
+    private Vector3 m_GridPosition = Vector3.zero;
 
     [Header("Field of Vector Settings")]
     [SerializeField, Range(2f, 100f)] private uint m_Density = 20;
-    [SerializeField] bool m_3D = false;
+
+    public uint DensityGrid
+    {
+        get { return m_Density; }
+        set
+        {
+            m_Density = value;
+            InitVectors();
+            InitRotVectors();
+        }
+    }
+
+    [SerializeField] private bool m_3D = false;
+
+    public bool ThreeDee
+    {
+        get { return m_3D; }
+        set
+        {
+            m_3D = value;
+            InitVectors();
+            InitRotVectors();
+            InitLineRenderers();
+        }
+    }
+
     [SerializeField] private bool m_LogScale;
     [SerializeField] private float m_Zoom = 10000f;
     private float m_MaxSizeVector = 1f;
+
     public bool bDisplayField
     {
         get => displayField;
@@ -33,19 +80,20 @@ public class VectorialFieldController : MonoBehaviour
                 InitVectors();
                 m_ArrowsParent.SetActive(true);
             }
-
             else
                 HideArrows();
             Debug.Log("Hide Field");
             displayField = value;
         }
     }
+
     [FormerlySerializedAs("bDisplayField")]
     [field: SerializeField] private bool displayField = true;
 
-    List<GameObject> m_Arrows = new List<GameObject>();
-    GameObject m_ArrowsParent;
+    private List<GameObject> m_Arrows = new List<GameObject>();
+    private GameObject m_ArrowsParent;
     [SerializeField] private GameObject m_ArrowPrefab;
+
     public bool bDisplayRotational
     {
         get => displayRotational;
@@ -56,24 +104,25 @@ public class VectorialFieldController : MonoBehaviour
                 InitRotVectors();
                 m_RotArrowsParent.SetActive(true);
             }
-
             else
                 HideRotArrows();
             Debug.Log("Hide Rotational");
             displayRotational = value;
         }
     }
+
     [FormerlySerializedAs("bDisplayRotational")]
     [field: SerializeField] private bool displayRotational = true;
 
-    List<GameObject> m_RotArrows = new List<GameObject>();
-    GameObject m_RotArrowsParent;
+    private List<GameObject> m_RotArrows = new List<GameObject>();
+    private GameObject m_RotArrowsParent;
     [SerializeField] private GameObject m_RotArrowPrefab;
 
     [Header("Field of Lines Settings")]
-    [SerializeField] LineRenderer m_LineModel;
-    List<LineRenderer> m_Lines = new List<LineRenderer>();
-    GameObject m_LinesParent;
+    [SerializeField] private LineRenderer m_LineModel;
+
+    private List<LineRenderer> m_Lines = new List<LineRenderer>();
+    private GameObject m_LinesParent;
 
     [SerializeField]
     public bool bDisplayLines
@@ -94,8 +143,10 @@ public class VectorialFieldController : MonoBehaviour
             displayLines = value;
         }
     }
+
     [FormerlySerializedAs("bDisplayLines")]
     [SerializeField] private bool displayLines = true;
+
     public int LineNb = 8;
     public int LineNbHorizontal = 5;
     public int LineNbVertical = 3;
@@ -125,6 +176,7 @@ public class VectorialFieldController : MonoBehaviour
         InitLineRenderers();
         m_LinesParent.SetActive(displayLines);
     }
+
     private void Awake()
     {
         m_Globals = FindObjectOfType<Globals>();
@@ -169,6 +221,7 @@ public class VectorialFieldController : MonoBehaviour
         m_Lines.Clear();
         Destroy(m_LinesParent);
     }
+
     private void ResetLineRenderer()
     {
         InitLineRenderers();
@@ -178,14 +231,17 @@ public class VectorialFieldController : MonoBehaviour
     {
         m_LinesParent.SetActive(false);
     }
+
     private void HideArrows()
     {
         m_ArrowsParent.SetActive(false);
     }
+
     private void HideRotArrows()
     {
         m_RotArrowsParent.SetActive(false);
     }
+
     private void OnValidate()
     {
         if (m_LinesParent != null)
@@ -207,6 +263,7 @@ public class VectorialFieldController : MonoBehaviour
             m_RotArrowsParent.SetActive(displayRotational);
         }
     }
+
     private void InitLineRenderers()
     {
         m_LineModel.positionCount = maxSuccesiveLines + 1;
@@ -287,6 +344,7 @@ public class VectorialFieldController : MonoBehaviour
         if (!displayField)
             HideArrows();
     }
+
     public void InitRotVectors()
     {
         if (m_3D)
@@ -341,7 +399,7 @@ public class VectorialFieldController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         m_LogScale = !m_bIgnoreSun;
         InitVectors();
@@ -349,7 +407,7 @@ public class VectorialFieldController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (displayField || displayRotational)
         {
@@ -404,7 +462,6 @@ public class VectorialFieldController : MonoBehaviour
                 float angleVStep = 180f / LineNbVertical * Mathf.Deg2Rad;
                 float angleVOffset = (90f / LineNbVertical) * Mathf.Deg2Rad;
 
-
                 for (int i = 0; i < LineNbHorizontal; i++)
                 {
                     float angleH = i * angleHStep + angleHOffset;
@@ -452,6 +509,7 @@ public class VectorialFieldController : MonoBehaviour
             previousPoint = currentPoint;
         }
     }
+
     private Vector3 ComputeAcceleration(Vector3 _positionUnity)
     {
         Vector3 newAcceleration = Vector3.zero;
@@ -474,37 +532,52 @@ public class VectorialFieldController : MonoBehaviour
     private Vector3 ComputeRotational(Vector3 _positionUnity, Vector3 _acceleration)
     {
         float step = 1;
-        Vector3 x_Increased = _positionUnity + new Vector3(step, 0f, 0f);
-        Vector3 y_Increased = _positionUnity + new Vector3(0f, step, 0f);
-        Vector3 z_Increased = _positionUnity + new Vector3(0f, 0f, step);
+        Vector3 x_Increased = _positionUnity; x_Increased.x += step;
+        Vector3 y_Increased = _positionUnity; y_Increased.y += step;
+        Vector3 z_Increased = _positionUnity; z_Increased.z += step;
 
-        Vector3 newAccelerationX = Vector3.zero;
-        Vector3 newAccelerationY = Vector3.zero;
-        Vector3 newAccelerationZ = Vector3.zero;
+        Vector3 newAccelerationX = Vector3.zero, newAccelerationY = Vector3.zero, newAccelerationZ = Vector3.zero;
+
         float minSqDistance = 1000f;
         float distConverter = (m_Globals.adu2m * m_Globals.unity2astronomy);
+        x_Increased *= distConverter;
+        y_Increased *= distConverter;
+        z_Increased *= distConverter;
+
         foreach (AstralObject influence in m_Globals.astralActors)
         {
             if (m_bIgnoreSun && influence == m_Globals.sun)
                 continue;
-            Vector3 toStarX = influence.ConvertedPosition - x_Increased * distConverter;
-            Vector3 toStarY = influence.ConvertedPosition - y_Increased * distConverter;
-            Vector3 toStarZ = influence.ConvertedPosition - z_Increased * distConverter;
-            double sqrMagX = toStarX.sqrMagnitude;
-            double sqrMagY = toStarY.sqrMagnitude;
-            double sqrMagZ = toStarZ.sqrMagnitude;
-            if (sqrMagX > minSqDistance)
-                newAccelerationX = toStarX * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMagX, -1.5));
-            if (sqrMagY > minSqDistance)
-                newAccelerationY = toStarY * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMagY, -1.5));
-            if (sqrMagZ > minSqDistance)
-                newAccelerationZ = toStarZ * (float)((double)influence.ConvertedMass * System.Math.Pow(sqrMagZ, -1.5));
+            {
+                Vector3 toStarX = influence.ConvertedPosition - x_Increased;
+                float sqrMagX = toStarX.sqrMagnitude;
+                if (sqrMagX > minSqDistance)
+                    newAccelerationX = toStarX * (influence.ConvertedMass * System.MathF.Pow(sqrMagX, -1.5f));
+            }
+            {
+                Vector3 toStarY = influence.ConvertedPosition - y_Increased;
+                float sqrMagY = toStarY.sqrMagnitude;
+                if (sqrMagY > minSqDistance)
+                    newAccelerationY = toStarY * (influence.ConvertedMass * System.MathF.Pow(sqrMagY, -1.5f));
+            }
+            {
+                Vector3 toStarZ = influence.ConvertedPosition - z_Increased;
+                float sqrMagZ = toStarZ.sqrMagnitude;
+                if (sqrMagZ > minSqDistance)
+                    newAccelerationZ = toStarZ * (influence.ConvertedMass * System.MathF.Pow(sqrMagZ, -1.5f));
+            }
         }
+
         Vector3 XDerivative = (newAccelerationX - _acceleration) /*/step*/; //Here step is one
         Vector3 YDerivative = (newAccelerationY - _acceleration) /*/step*/; //Here step is one
         Vector3 ZDerivative = (newAccelerationZ - _acceleration) /*/step*/; //Here step is one
 
-        Vector3 rotational = new Vector3(YDerivative.z - ZDerivative.y, ZDerivative.x - XDerivative.z, XDerivative.y - YDerivative.x);
+        Vector3 rotational = new(
+            YDerivative.z - ZDerivative.y,
+            ZDerivative.x - XDerivative.z,
+            XDerivative.y - YDerivative.x
+            );
+
         return rotational;
     }
 }

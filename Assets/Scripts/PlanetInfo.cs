@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEditor;
@@ -20,6 +21,14 @@ public class PlanetInfo : MonoBehaviour
     [SerializeField] private Toggle LinesToggle = null;
     [SerializeField] private Toggle RotateToggle = null;
 
+    [SerializeField] private Slider SliderSize = null;
+    private TMP_Text SliderSizeName;
+    [SerializeField] private Slider SliderDensity = null;
+    private TMP_Text SliderDensityName;
+
+    [SerializeField] private Toggle ThreeDeeToggle = null;
+    [SerializeField] private Toggle IgnoreSunToggle = null;
+
     public bool IsObitingActive
     { get { return OrbitToggle.isOn && IsFollowingPlanet; } }
 
@@ -36,7 +45,8 @@ public class PlanetInfo : MonoBehaviour
     {
         if (InfoDisplay == null || DisplayDisplay == null || PlanetNameDisplay == null
             || OrbitToggle == null || VFieldToggle == null || LinesToggle == null || RotateToggle == null
-            || VelocityDisplay == null || MassDisplay == null || PositionDisplay == null)
+            || VelocityDisplay == null || MassDisplay == null || PositionDisplay == null
+            || SliderDensity == null || SliderSize == null || ThreeDeeToggle == null || IgnoreSunToggle == null)
         {
             Debug.LogError("One or multiple field(s) unset in NewPlanetPlacer");
 #if UNITY_EDITOR
@@ -58,6 +68,21 @@ public class PlanetInfo : MonoBehaviour
         VFController.bDisplayField = false;
         VFController.bDisplayLines = false;
         VFController.bDisplayRotational = false;
+
+        SliderSize.onValueChanged.AddListener(SizeChanged);
+        SliderDensity.onValueChanged.AddListener(DensityChanged);
+
+        SliderSizeName = SliderSize.GetComponentInChildren<TMP_Text>();
+        SliderDensityName = SliderDensity.GetComponentInChildren<TMP_Text>();
+
+        SliderSizeName.text = "Size : " + SliderSize.value.ToString("N0");
+        SliderDensityName.text = "Density : " + SliderDensity.value.ToString("N0");
+
+        ThreeDeeToggle.onValueChanged.AddListener(ThreeDeeChanged);
+        IgnoreSunToggle.onValueChanged.AddListener(IgnoreSunChanged);
+
+        VFController.ThreeDee = true;
+        VFController.IgnoreSun = false;
     }
 
     private void OrbitMode(bool _newValue)
@@ -81,6 +106,28 @@ public class PlanetInfo : MonoBehaviour
     private void RotateMode(bool _newValue)
     {
         VFController.bDisplayRotational = _newValue;
+    }
+
+    private void SizeChanged(float _newValue)
+    {
+        VFController.SizeGrid = _newValue;
+        SliderSizeName.text = "Size : " + _newValue.ToString("N0");
+    }
+
+    private void DensityChanged(float _newValue)
+    {
+        VFController.DensityGrid = (uint)_newValue;
+        SliderDensityName.text = "Density : " + _newValue.ToString("N0");
+    }
+
+    private void ThreeDeeChanged(bool _newValue)
+    {
+        VFController.ThreeDee = _newValue;
+    }
+
+    private void IgnoreSunChanged(bool _newValue)
+    {
+        VFController.IgnoreSun = _newValue;
     }
 
     private void LateUpdate()
@@ -162,5 +209,9 @@ public class PlanetInfo : MonoBehaviour
         VFieldToggle.gameObject.SetActive(!enable);
         LinesToggle.gameObject.SetActive(!enable);
         RotateToggle.gameObject.SetActive(!enable);
+        SliderSize.gameObject.SetActive(!enable);
+        SliderDensity.gameObject.SetActive(!enable);
+        ThreeDeeToggle.gameObject.SetActive(!enable);
+        IgnoreSunToggle.gameObject.SetActive(!enable);
     }
 }
