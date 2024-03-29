@@ -6770,12 +6770,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Right click on planet to lock/unlock camera
+  m_text: 'Left click to enable freecam mode.
 
-    Left click to enable
-    freecam mode.
+    Right click on planet to display
+    its infos.
 
-    Press Escape to quit.
+    Enter Orbit Mode to stay focused on it.
+
+    Slider is Time per
+    Tick (12h per tick at start)
+
+    Press Escape to quit simulation.
 
 '
   m_isRightToLeft: 0
