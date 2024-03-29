@@ -8,12 +8,10 @@ public class PlanetInfo : MonoBehaviour
 {
     [SerializeField] private TMP_Text InfoDisplay = null;
 
-    [SerializeField] private GameObject DisplayDisplay = null;
-    private string PlanetName = string.Empty;
-
+    [SerializeField] private GameObject DisplayDisplay = null; // Text displays
     [SerializeField] private TMP_Text PlanetNameDisplay = null;
 
-    [SerializeField] private TMP_Text VelocityDisplay = null;
+    [SerializeField] private TMP_Text VelocityDisplay = null; // Values displays
     [SerializeField] private TMP_Text MassDisplay = null;
     [SerializeField] private TMP_Text PositionDisplay = null;
 
@@ -89,25 +87,20 @@ public class PlanetInfo : MonoBehaviour
 
     private void FollowPlanet(AstralObject _planet)
     {
-        Planet = _planet;
         SwitchModes();
+
+        Planet = _planet;
+        PlanetNameDisplay.text = _planet.name.ToUpper();
+
+        PlanetFollower();
     }
 
     public void FollowPlanet(GameObject _planet)
     {
         if (_planet.TryGetComponent(out AstralObject AstralObj))
-        {
             FollowPlanet(AstralObj);
-            PlanetName = _planet.name;
-            {
-                PlanetName.ToUpper();
-                PlanetNameDisplay.text = PlanetName;
-            }
-        }
         else
-        {
             Debug.LogError("Follow Planet not an AstralObject");
-        }
     }
 
     public IEnumerator StopFollowPlanet()
