@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Xml.Schema;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -96,8 +94,8 @@ public class PlanetInfo : MonoBehaviour
         {
             Vector3 Velocity = Planet.ConvertedVelocity;
             string VelocityTxt =
-                "X = " + Velocity.x + "\n" +
-                "Z = " + Velocity.z;
+                "X = " + Velocity.x.ToString("N0") + "\n" +
+                "Z = " + Velocity.z.ToString("N0");
             VelocityDisplay.text = VelocityTxt;
         }
         {
@@ -109,18 +107,22 @@ public class PlanetInfo : MonoBehaviour
         {
             Vector3 Position = Planet.ConvertedPosition;
             string PositionTxt =
-                "X = " + Position.x + "\n" +
-                "Z = " + Position.z;
+                "X = " + Position.x.ToString("N0") + "\n" +
+                "Z = " + Position.z.ToString("N0");
             PositionDisplay.text = PositionTxt;
         }
     }
 
     private void FollowPlanet(AstralObject _planet)
     {
+        Planet = _planet;
         SwitchModes();
 
-        Planet = _planet;
         PlanetNameDisplay.text = _planet.name.ToUpper();
+
+        VFController.bDisplayField = VFieldToggle.isOn;
+        VFController.bDisplayLines = LinesToggle.isOn;
+        VFController.bDisplayRotational = RotateToggle.isOn;
 
         PlanetFollower();
     }
