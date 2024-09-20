@@ -1,4 +1,4 @@
-# Solar system Simulator (Gratitation study)
+# Solar system Simulator (Gravitation study)
 
 ## Goal
 The goal of this exercise was to create a solar system simulator, or more generally of a set of N celestial bodies. We are therefore interested in gravitational force fields, which are conservative vector fields.
