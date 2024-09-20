@@ -1,36 +1,31 @@
-# TP 
+# Solar system Simulator (Gratitation study)
 
-## Objectif
+## Goal
+The goal of this exercise was to create a solar system simulator, or more generally of a set of N celestial bodies. We are therefore interested in gravitational force fields, which are conservative vector fields.
 
-L’objectif de ce TP était de créer un simulateur de système solaire, ou de manière plus générale d’un ensemble de N corps célestes. 
-On s’intéresse donc aux champs de forces gravitationnelles qui sont des champs vectoriels conservatifs.
+##Features
 
-## Features
+Choice of:
 
-Choix de :
- - La position de la caméra ([Free Fly Cam par Sergey Stafeev](https://assetstore.unity.com/packages/tools/camera/free-fly-camera-140739) : 
- WASD mouvements, QE monter/descendre, souris pour l'orientation, shift boost vitesse, accélération).
- - Le placement, la masse et la vitesse initiale d'une nouvelle planète dans le système.
- - La vitesse de la simution (en X par Ticks, ex: 120 heures par game tick).
- - Monter ou cacher certains éléments: les informations d'une planète (vitesse, masse, position), le champ vectoriel.  
+   - Camera position (Free Fly Cam by Sergey Stafeev: WASD for movement, QE for up/down, mouse for orientation, shift for speed boost, acceleration).
+   - Placement, mass, and initial velocity of a new planet in the system.
+   - Simulation speed (in X per ticks, e.g., 120 hours per game tick).
+   - Show or hide certain elements: planet information (speed, mass, position), vector field.
 
-## Précisions
+##Details
 
-Les constantes utilisées :
- - Gravite Universel = 6.6743e-11F
+The constants used:
 
-Valeurs conseillées :
- - Vitesse de la simution : Plus la vitesse est rapide, plus les imprécisions s'accumulent (et plus les trails des planètes sont grosses).
- On recommande donc de rester sur des valeurs proche de celle par défauts. 
- - Nouvelle planète : 
+    - Universal Gravity = 6.6743e-11F
 
-## Architecture 
+Recommended values:
 
-Tous les calculs des planètes sont trouvables dans Astral Object.
-Les constantes et calculs du temps dans Globals.
-Le champ vectoriel dans Vectorial Fields.
-La camera dans Camera Behaviour & Free Fly Camera.
-Les interfaces dans Instruction Button, New Planet Placer, Planet Info & Time Controller.
+  -  Simulation speed: The faster the speed, the more inaccuracies accumulate (and the larger the planet trails become). It is therefore recommended to stick to values close to the default ones.
+  -  New planet: speed from 5 to 10 a.u. in z is good for orbital stability.
+
+##Architecture
+
+All planet calculations can be found in Astral Object. Constants and time calculations in Globals. The vector field in Vectorial Fields. The camera in Camera Behaviour & Free Fly Camera. Interfaces in Instruction Button, New Planet Placer, Planet Info & Time Controller.
 
 ## Images
 
@@ -46,7 +41,7 @@ _Display of field of lines._
 _Second scene with an asteroid field._
 
 
-## Écrit par
-- <a href = "mailto: f.becaud@student.isartdigital.com">Félix Becaud</a>
+## Written by
+- <a href = "mailto: felix.becaud@gmail.com">Félix Becaud</a>
 - <a href = "mailto: j.perrochaud@student.isartdigital.com">Jessica Perrochaud</a>
 - <a href = "mailto: m.dero@student.isartdigital.com">Morgane Dero</a>
