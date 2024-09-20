@@ -28,17 +28,23 @@ Valeurs conseillées :
 
 Tous les calculs des planètes sont trouvables dans Astral Object.
 Les constantes et calculs du temps dans Globals.
-Le champ vectoriel dans Vectorian Fields.
+Le champ vectoriel dans Vectorial Fields.
 La camera dans Camera Behaviour & Free Fly Camera.
 Les interfaces dans Instruction Button, New Planet Placer, Planet Info & Time Controller.
 
 ## Images
 
-![SC1](Screens/scrn1.png)
-![SC2](Screens/scrn2.png)
-![SC3](Screens/scrn3.png)
-![SC4](Screens/scrn4.png)
-![SC5](Screens/scrn5.png)
+![SC4](Screens/ToInfinityAndBeyond.png)
+_Gravitation follows the Sun if moving._
+![SC1](Screens/VectorialField.png)
+_Display of vectorial field._
+![SC2](Screens/Rotational.png)
+_Display of rotational field._
+![SC3](Screens/FieldofLines.png.png)
+_Display of field of lines._
+![SC5](Screens/AsteroidField.png)
+_Second scene with an asteroid field._
+
 
 ## Écrit par
 - <a href = "mailto: f.becaud@student.isartdigital.com">Félix Becaud</a>
