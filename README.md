@@ -3,7 +3,7 @@
 ## Goal
 The goal of this exercise was to create a solar system simulator, or more generally of a set of N celestial bodies. We are therefore interested in gravitational force fields, which are conservative vector fields.
 
-##Features
+## Features
 
 Choice of:
 
@@ -12,7 +12,7 @@ Choice of:
    - Simulation speed (in X per ticks, e.g., 120 hours per game tick).
    - Show or hide certain elements: planet information (speed, mass, position), vector field.
 
-##Details
+## Details
 
 The constants used:
 
@@ -23,7 +23,7 @@ Recommended values:
   -  Simulation speed: The faster the speed, the more inaccuracies accumulate (and the larger the planet trails become). It is therefore recommended to stick to values close to the default ones.
   -  New planet: speed from 5 to 10 a.u. in z is good for orbital stability.
 
-##Architecture
+## Architecture
 
 All planet calculations can be found in Astral Object. Constants and time calculations in Globals. The vector field in Vectorial Fields. The camera in Camera Behaviour & Free Fly Camera. Interfaces in Instruction Button, New Planet Placer, Planet Info & Time Controller.
 
