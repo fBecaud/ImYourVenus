@@ -21,7 +21,7 @@ The constants used:
 Recommended values:
 
   -  Simulation speed: The faster the speed, the more inaccuracies accumulate (and the larger the planet trails become). It is therefore recommended to stick to values close to the default ones.
-  -  New planet: speed from 5 to 10 a.u. in Z-Axis is good for orbital stability.
+  -  New planet: speed from 5 to 10 a.u. is good for orbital stability.
 
 ## Architecture
 
