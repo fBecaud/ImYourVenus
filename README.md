@@ -16,7 +16,7 @@ Choice of:
 
 The constants used:
 
-    - Universal Gravity = 6.6743e-11F
+  - Universal Gravity = 6.6743e-11F
 
 Recommended values:
 
