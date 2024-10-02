@@ -1,3 +1,4 @@
 *.dae filter=lfs diff=lfs merge=lfs -text
 File[[:space:]]Assets/Imported/BreakableAsteroids/Asteroids/zasteroids.dae filter=lfs diff=lfs merge=lfs -text
 */zasteroids.dae filter=lfs diff=lfs merge=lfs -text
+Assets/Imported/BreakableAsteroids/Asteroids/zasteroids.dae filter=lfs diff=lfs merge=lfs -text
